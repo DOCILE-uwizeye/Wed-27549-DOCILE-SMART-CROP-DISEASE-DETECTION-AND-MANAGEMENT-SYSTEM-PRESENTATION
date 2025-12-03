@@ -106,58 +106,53 @@ DRAW I.O
 )
 
 
+# PHASE III: Logical Data Model (ERD + 3NF + Data Dictionary)
 
-# PHASE III: Logical Data Model (ERD + 3NF + Dictionary)
+---
 
 ## 1. ER Diagram Components (Entities & Attributes)
 
 ### **users**
-- user_id (PK)
-- name
-- email
-- password
-- role
+- **user_id** (PK)  
+- name  
+- email  
+- password  
+- role  
 
 ### **disease_profiles**
-- disease_id (PK)
-- disease_name
-- symptoms
-- causes
-- treatment
-- prevention
+- **disease_id** (PK)  
+- disease_name  
+- symptoms  
+- causes  
+- treatment  
+- prevention  
 
 ### **scans**
-- scan_id (PK)
-- user_id (FK)
-- image_path
-- detected_disease (FK)
-- confidence_score
-- scan_date
+- **scan_id** (PK)  
+- **user_id** (FK → users.user_id)  
+- image_path  
+- **detected_disease** (FK → disease_profiles.disease_id)  
+- confidence_score  
+- scan_date  
 
 ### **recommendations**
-- rec_id (PK)
-- disease_id (FK)
-- recommendation
+- **rec_id** (PK)  
+- **disease_id** (FK → disease_profiles.disease_id)  
+- recommendation  
 
 ### **crop_types**
-- crop_id (PK)
-- crop_name
+- **crop_id** (PK)  
+- crop_name  
 
 ---
 
 ## 2. Normalization Summary (Up to 3NF)
 
-### ✔ 1NF
-- All tables contain atomic values.
-- Each record is unique.
-
-### ✔ 2NF
-- All non-key attributes fully depend on the primary key.
-- No partial dependencies.
-
-### ✔ 3NF
-- No transitive dependencies.
-- All attributes depend only on the table's primary key.
+| Normal Form | Description |
+|------------|-------------|
+| **1NF** | All tables contain atomic values. Each record is unique. |
+| **2NF** | All non-key attributes fully depend on the primary key. No partial dependencies exist. |
+| **3NF** | No transitive dependencies. All attributes depend only on the table's primary key. |
 
 ---
 
@@ -169,51 +164,63 @@ DRAW I.O
 | users | name | VARCHAR | NOT NULL | User full name |
 | users | email | VARCHAR | UNIQUE, NOT NULL | Login email |
 | users | password | VARCHAR | NOT NULL | Hashed password |
-| users | role | VARCHAR | NOT NULL | user/admin |
-
+| users | role | VARCHAR | NOT NULL | Role (user/admin) |
 | disease_profiles | disease_id | INT | PK | Disease identifier |
 | disease_profiles | disease_name | VARCHAR | NOT NULL | Name of disease |
-| disease_profiles | symptoms | TEXT | NOT NULL | Symptoms |
-| disease_profiles | causes | TEXT | NOT NULL | Causes |
-| disease_profiles | treatment | TEXT | NOT NULL | Treatment |
+| disease_profiles | symptoms | TEXT | NOT NULL | Symptoms description |
+| disease_profiles | causes | TEXT | NOT NULL | Causes of the disease |
+| disease_profiles | treatment | TEXT | NOT NULL | Treatment methods |
 | disease_profiles | prevention | TEXT | NOT NULL | Prevention methods |
-
 | scans | scan_id | INT | PK | Scan record ID |
-| scans | user_id | INT | FK → users.user_id | User who uploaded |
-| scans | image_path | VARCHAR | NOT NULL | Uploaded image file |
+| scans | user_id | INT | FK → users.user_id | User who uploaded scan |
+| scans | image_path | VARCHAR | NOT NULL | Path to uploaded image |
 | scans | detected_disease | INT | FK → disease_profiles.disease_id | Disease detected |
 | scans | confidence_score | FLOAT | NOT NULL | Accuracy percentage |
-| scans | scan_date | DATE | NOT NULL | When scan happened |
-
+| scans | scan_date | DATE | NOT NULL | Date of scan |
 | recommendations | rec_id | INT | PK | Recommendation ID |
 | recommendations | disease_id | INT | FK → disease_profiles.disease_id | Related disease |
 | recommendations | recommendation | TEXT | NOT NULL | Advice or solution |
-
 | crop_types | crop_id | INT | PK | Crop type ID |
-| crop_types | crop_name | VARCHAR | UNIQUE | Crop name |
+| crop_types | crop_name | VARCHAR | UNIQUE | Name of crop |
 
 ---
 
 ## 4. BI Considerations
-- Fact table candidate: **scans**
-- Dimension tables:  
-  - users  
-  - disease_profiles  
-  - crop_types  
-- Slowly Changing Dimensions (SCD):
-  - Disease treatments may change over time.
-- Audit Trail:
-  - log table recommended: user actions, scan attempts.
+
+| Aspect | Notes |
+|--------|------|
+| Fact Table Candidate | **scans** |
+| Dimension Tables | users, disease_profiles, crop_types |
+| Slowly Changing Dimensions (SCD) | Disease treatments may change over time |
+| Audit Trail | Recommended: log table for user actions, scan attempts |
 
 ---
 
 ## 5. Assumptions
-- Each scan is linked to exactly one user.
-- Each scan detects only one disease at a time.
-- Recommendations are tied to diseases.
-- Crop types may be linked later for expansion.
 
+1. Each scan is linked to exactly one user.  
+2. Each scan detects only one disease at a time.  
+3. Recommendations are tied to diseases.  
+4. Crop types may be linked later for future expansion.  
+5. Users, scans, and recommendations are maintained in a consistent format to ensure data integrity.  
 
+---
 
+## 6. ERD Relationships (Summary)
 
+| Table | Relationship | Reference |
+|-------|-------------|-----------|
+| scans | Many-to-One | users.user_id |
+| scans | Many-to-One | disease_profiles.disease_id (detected_disease) |
+| recommendations | Many-to-One | disease_profiles.disease_id |
+
+> **Note:** The **scans** table acts as a fact table in BI; **users**, **disease_profiles**, and **crop_types** act as dimension tables.
+
+---
+
+## 7. Optional Notes for GitHub/VS Code
+
+- You can render this Markdown directly in GitHub to see tables and headings.  
+- For visual ERD, you may later add ASCII diagrams or link images using `![ERD](path/to/image.png)`.  
+- All foreign keys are clearly indicated in the Data Dictionary and ERD Relationships table.
 
