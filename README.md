@@ -101,3 +101,13 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 ## Deliverables
 - BPMN Diagram (PNG/JPG)
 - This documentation file
+  (./<img width="1275" height="582" alt="DDI1" src="https://github.com/user-attachments/assets/95f7173b-6643-45ff-ad1c-08192e193208" />
+)
+
+
+
+
+
+
+
+
