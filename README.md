@@ -224,3 +224,4 @@ DRAW I.O
 - For visual ERD, you may later add ASCII diagrams or link images using `![ERD](path/to/image.png)`.  
 - All foreign keys are clearly indicated in the Data Dictionary and ERD Relationships table.
 
+(./images/database_schema.png)<img width="1358" height="666" alt="DDI3" src="https://github.com/user-attachments/assets/efe0b0cf-d5c3-44af-ae97-b0956ca328f5" />
