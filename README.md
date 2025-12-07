@@ -260,7 +260,8 @@ ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagement
 
 ## Screenshot 2: Pluggable Databases Verification
 
-![Pluggable Databases](../screenshots/phase4_database_creation/02_pluggable_databases.png)
+(../screenshots/phase4_database_creation/02_pluggable_databases.png)<img width="847" height="504" alt="phase IV scr2" src="https://github.com/user-attachments/assets/d9b468b1-f8b5-40b2-8ed6-e7af5841164e" />
+
 
 ### Description
 Verification query showing all pluggable databases in the container database. The screenshot confirms that the newly created database is in READ WRITE mode and fully operational.
