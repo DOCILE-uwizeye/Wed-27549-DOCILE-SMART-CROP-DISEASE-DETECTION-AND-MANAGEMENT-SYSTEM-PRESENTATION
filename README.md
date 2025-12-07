@@ -436,7 +436,8 @@ ARCHIVE LOG LIST;
 **Purpose:** Store user information (farmers, admins, agronomists)
 
 **SQL Creation Script:**
-(https://github.com/yourrepo/.../image.png)![Uploading phase V scr1.png…]()
+(https://user-images.githubusercontent.com/12345/image.png)<img width="742" height="646" alt="phase V scr1" src="https://github.com/user-attachments/assets/a89e6316-b7ce-4da3-b103-45aaab9ea871" />
+
 
 
 
