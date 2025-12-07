@@ -283,7 +283,8 @@ SELECT name, open_mode FROM v$pdbs;
 
 ## Screenshot 3: Session Connected to Database
 
-![Session Connected](../screenshots/phase4_database_creation/03_session_connected.png)
+(../screenshots/phase4_database_creation/03_session_connected.png)<img width="872" height="271" alt="phase IV scr3" src="https://github.com/user-attachments/assets/f440027f-2907-4851-8376-1863edbd4520" />
+
 
 ### Description
 Demonstrates successful session switch to the newly created pluggable database. The SHOW CON_NAME command confirms the session is now connected to the correct container.
@@ -308,7 +309,8 @@ WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB
 
 ## Screenshot 4: Privileges Granted
 
-![Privileges Granted](../screenshots/phase4_database_creation/04_privileges_granted.png)
+(../screenshots/phase4_database_creation/04_privileges_granted.png)<img width="471" height="535" alt="phase IV scr4" src="https://github.com/user-attachments/assets/6b54afcd-315d-4218-bee8-bcf7a0de94a6" />
+
 
 ### Description
 Shows all system privileges granted to the crop_admin user. These privileges enable the admin user to create all necessary database objects for the project.
@@ -344,7 +346,8 @@ GRANT UNLIMITED TABLESPACE TO crop_admin;
 
 ## Screenshot 5: Tablespaces Created
 
-![Tablespaces Created](../screenshots/phase4_database_creation/05_tablespaces_created.png)
+(../screenshots/phase4_database_creation/05_tablespaces_created.png)<img width="404" height="526" alt="phase IV scr5" src="https://github.com/user-attachments/assets/51ea42d9-3d54-4171-98dd-4a3fd76e454e" />
+
 
 ### Description
 Shows the creation of three tablespaces with proper configuration: data tablespace for storing tables, index tablespace for storing indexes, and temporary tablespace for sorting operations.
@@ -397,7 +400,8 @@ MAXSIZE UNLIMITED;
 
 ## Screenshot 6: Tablespace Verification
 
-![Tablespace Verification](../screenshots/phase4_database_creation/06_tablespace_verification.png)
+(../screenshots/phase4_database_creation/06_tablespace_verification.png)<img width="599" height="506" alt="phase IV scr6" src="https://github.com/user-attachments/assets/381bc565-131f-4600-9040-f4a593d6b0a2" />
+
 
 ### Description
 Verification queries confirming all tablespaces are ONLINE and properly configured. Also shows the user's default and temporary tablespace assignments.
@@ -445,7 +449,8 @@ QUOTA UNLIMITED ON crop_index_ts;
 
 ## Screenshot 7: Memory Configuration
 
-![Memory Configuration](../screenshots/phase4_database_creation/07_memory_configuration.png)
+(../screenshots/phase4_database_creation/07_memory_configuration.png)<img width="863" height="429" alt="phase IV scr7" src="https://github.com/user-attachments/assets/f1656ebf-fc60-44ef-bde0-1db50791b21c" />
+
 
 ### Description
 Shows memory parameter configuration and archive log mode status. The PGA aggregate target was set to 256MB for optimal performance during development.
