@@ -442,12 +442,9 @@ ARCHIVE LOG LIST;
 
 
 CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-```
 
-**Table Description:**
-```sql
-DESC users;
-```
+(https://user-images.githubusercontent.com/12345/image.png)<img width="822" height="389" alt="phase V scr3 - Copy" src="https://github.com/user-attachments/assets/8c194d35-3721-4cde-9258-64491dc88de8" />
+
 
 **Column Details:**
 
@@ -465,19 +462,8 @@ DESC users;
 ### Table 2: CROP_TYPES
 
 **Purpose:** Store information about different crop types
-
 **SQL Creation Script:**
-```sql
-CREATE TABLE crop_types (
-    crop_id NUMBER(10) PRIMARY KEY,
-    crop_name VARCHAR2(100) NOT NULL UNIQUE,
-    scientific_name VARCHAR2(150),
-    growing_season VARCHAR2(50),
-    created_date DATE DEFAULT SYSDATE
-);
-
-CREATE SEQUENCE crop_types_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-```
+(https://user-images.githubusercontent.com/12345/image.png)<img width="822" height="389" alt="phase V scr3" src="https://github.com/user-attachments/assets/5a0ebe18-b544-4e96-926d-c0854209b874" />
 
 **Column Details:**
 
@@ -496,22 +482,7 @@ CREATE SEQUENCE crop_types_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Purpose:** Store comprehensive disease information and management strategies
 
 **SQL Creation Script:**
-```sql
-CREATE TABLE disease_profiles (
-    disease_id NUMBER(10) PRIMARY KEY,
-    disease_name VARCHAR2(150) NOT NULL,
-    symptoms VARCHAR2(1000),
-    causes VARCHAR2(1000),
-    treatment VARCHAR2(2000),
-    prevention VARCHAR2(2000),
-    severity_level VARCHAR2(20) CHECK (severity_level IN ('low', 'medium', 'high', 'critical')),
-    created_date DATE DEFAULT SYSDATE
-);
-
-CREATE SEQUENCE disease_profiles_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
-CREATE INDEX idx_disease_name ON disease_profiles(disease_name);
-```
+(https://user-images.githubusercontent.com/12345/image.png)<img width="945" height="547" alt="phase V scr4" src="https://github.com/user-attachments/assets/6afc669e-74f8-47ee-adf2-2031631f6df9" />
 
 **Column Details:**
 
@@ -526,28 +497,14 @@ CREATE INDEX idx_disease_name ON disease_profiles(disease_name);
 | severity_level | VARCHAR2(20) | CHECK | Severity (low/medium/high/critical) |
 | created_date | DATE | DEFAULT SYSDATE | Record creation date |
 
----
+
 
 ### Table 4: RECOMMENDATIONS
 
 **Purpose:** Store treatment recommendations for each disease
 
 **SQL Creation Script:**
-```sql
-CREATE TABLE recommendations (
-    rec_id NUMBER(10) PRIMARY KEY,
-    disease_id NUMBER(10) NOT NULL,
-    recommendation VARCHAR2(2000) NOT NULL,
-    rec_type VARCHAR2(50) CHECK (rec_type IN ('chemical', 'organic', 'cultural', 'biological')),
-    created_date DATE DEFAULT SYSDATE,
-    CONSTRAINT fk_rec_disease FOREIGN KEY (disease_id) 
-        REFERENCES disease_profiles(disease_id) ON DELETE CASCADE
-);
-
-CREATE SEQUENCE recommendations_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
-CREATE INDEX idx_rec_disease ON recommendations(disease_id);
-```
+(https://user-images.githubusercontent.com/12345/image.png)<img width="1071" height="461" alt="phase V scr5" src="https://github.com/user-attachments/assets/61c20992-b32e-4a6b-a504-cfc3093cebc3" />
 
 **Column Details:**
 
@@ -559,38 +516,14 @@ CREATE INDEX idx_rec_disease ON recommendations(disease_id);
 | rec_type | VARCHAR2(50) | CHECK | Type (chemical/organic/cultural/biological) |
 | created_date | DATE | DEFAULT SYSDATE | Record creation date |
 
----
+
 
 ### Table 5: SCANS
 
 **Purpose:** Store disease detection scan records
 
 **SQL Creation Script:**
-```sql
-CREATE TABLE scans (
-    scan_id NUMBER(10) PRIMARY KEY,
-    user_id NUMBER(10) NOT NULL,
-    image_path VARCHAR2(500) NOT NULL,
-    detected_disease NUMBER(10),
-    confidence_score NUMBER(5,2) CHECK (confidence_score BETWEEN 0 AND 100),
-    scan_date DATE DEFAULT SYSDATE,
-    scan_status VARCHAR2(20) CHECK (scan_status IN ('pending', 'completed', 'failed')),
-    crop_id NUMBER(10),
-    CONSTRAINT fk_scan_user FOREIGN KEY (user_id) 
-        REFERENCES users(user_id) ON DELETE CASCADE,
-    CONSTRAINT fk_scan_disease FOREIGN KEY (detected_disease) 
-        REFERENCES disease_profiles(disease_id) ON DELETE SET NULL,
-    CONSTRAINT fk_scan_crop FOREIGN KEY (crop_id) 
-        REFERENCES crop_types(crop_id) ON DELETE SET NULL
-);
-
-CREATE SEQUENCE scans_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
-CREATE INDEX idx_scan_user ON scans(user_id);
-CREATE INDEX idx_scan_disease ON scans(detected_disease);
-CREATE INDEX idx_scan_date ON scans(scan_date);
-CREATE INDEX idx_scan_crop ON scans(crop_id);
-```
+(https://user-images.githubusercontent.com/12345/image.png)<img width="1175" height="665" alt="phase V scr6 - Copy" src="https://github.com/user-attachments/assets/ea8454a9-c034-49d1-9737-19e3fb5ee840" />
 
 **Column Details:**
 
