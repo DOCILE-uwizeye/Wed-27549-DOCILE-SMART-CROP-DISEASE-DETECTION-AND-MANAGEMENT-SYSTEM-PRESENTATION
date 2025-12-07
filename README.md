@@ -42,7 +42,6 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 | Database | Stores users, scans, diseases, history |
 | Admin | Updates disease profiles & recommendations |
 
----
 
 ## 3. Business Process (Swimlane Description)
 ### **Swimlanes**
@@ -60,7 +59,7 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 6. System stores scan + results in database.
 7. Farmer receives disease report and recommendation.
 
----
+
 
 ## 4. BPMN/UML Notations Used
 - **Start Event:** Upload image  
@@ -69,7 +68,7 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 - **End Event:** Results displayed  
 - **Data Stores:** Users, disease_profiles, scans, recommendations  
 
----
+
 
 ## 5. Logical Flow Validation
 - Fully linear from image upload → analysis → results.
@@ -77,7 +76,7 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 - No missing dependencies.
 - All actors have defined responsibilities.
 
----
+
 
 ## 6. Documentation Summary
 ### Key MIS Functions Supported
@@ -96,7 +95,7 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 - Crop health forecasting  
 - Region-based disease heatmaps  
 
----
+
 
 ## Deliverables
 - BPMN Diagram (PNG/JPG)
@@ -108,7 +107,7 @@ DRAW I.O
 
 # PHASE III: Logical Data Model (ERD + 3NF + Data Dictionary)
 
----
+
 
 ## 1. ER Diagram Components (Entities & Attributes)
 
@@ -144,7 +143,7 @@ DRAW I.O
 - **crop_id** (PK)  
 - crop_name  
 
----
+
 
 ## 2. Normalization Summary (Up to 3NF)
 
@@ -154,7 +153,7 @@ DRAW I.O
 | **2NF** | All non-key attributes fully depend on the primary key. No partial dependencies exist. |
 | **3NF** | No transitive dependencies. All attributes depend only on the table's primary key. |
 
----
+
 
 ## 3. Data Dictionary
 
@@ -183,7 +182,7 @@ DRAW I.O
 | crop_types | crop_id | INT | PK | Crop type ID |
 | crop_types | crop_name | VARCHAR | UNIQUE | Name of crop |
 
----
+
 
 ## 4. BI Considerations
 
@@ -194,7 +193,7 @@ DRAW I.O
 | Slowly Changing Dimensions (SCD) | Disease treatments may change over time |
 | Audit Trail | Recommended: log table for user actions, scan attempts |
 
----
+
 
 ## 5. Assumptions
 
@@ -204,7 +203,7 @@ DRAW I.O
 4. Crop types may be linked later for future expansion.  
 5. Users, scans, and recommendations are maintained in a consistent format to ensure data integrity.  
 
----
+
 
 ## 6. ERD Relationships (Summary)
 
@@ -225,11 +224,8 @@ DRAW I.O
 **Group:** Wednesday  
 **Project:** Smart Crop Disease Detection & Management System  
 **Database:** wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db  
-**Date:** December 7, 2025
 
----
-
-## Screenshot 1: Database Creation
+##  Database Creation
 (../screenshots/phase4_database_creation/01_database_created.png)<img width="938" height="678" alt="phase IV scr1" src="https://github.com/user-attachments/assets/0a43a2e9-83b7-45d8-ad7f-632a18d1cee5" />
 
 
@@ -248,7 +244,7 @@ FILE_NAME_CONVERT = ('pdbseed', 'wed_27549_docile_smartcropdiseasedetectionandma
 ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db OPEN;
 
 ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db SAVE STATE;
-```
+
 
 ### Key Details
 - **Database Name:** wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
@@ -256,9 +252,9 @@ ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagement
 - **Password:** docile
 - **Status:** Pluggable database created and opened successfully
 
----
 
-## Screenshot 2: Pluggable Databases Verification
+
+## Pluggable Databases Verification
 
 (../screenshots/phase4_database_creation/02_pluggable_databases.png)<img width="847" height="504" alt="phase IV scr2" src="https://github.com/user-attachments/assets/d9b468b1-f8b5-40b2-8ed6-e7af5841164e" />
 
@@ -269,7 +265,7 @@ Verification query showing all pluggable databases in the container database. Th
 ### Query Used
 ```sql
 SELECT name, open_mode FROM v$pdbs;
-```
+
 
 ### Results
 | Database Name | Open Mode | Status |
@@ -279,9 +275,9 @@ SELECT name, open_mode FROM v$pdbs;
 | DO_PDB_27549 | READ WRITE | Other PDB |
 | **WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB** | **READ WRITE** | **✓ Active** |
 
----
 
-## Screenshot 3: Session Connected to Database
+
+## Session Connected to Database
 
 (../screenshots/phase4_database_creation/03_session_connected.png)<img width="872" height="271" alt="phase IV scr3" src="https://github.com/user-attachments/assets/f440027f-2907-4851-8376-1863edbd4520" />
 
@@ -294,20 +290,15 @@ Demonstrates successful session switch to the newly created pluggable database. 
 ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
 
 SHOW CON_NAME;
-```
+
 
 ### Output Verification
-```
+
 CON_NAME
 ------------------------------------------------------------
 WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB
-```
 
-**Status:** ✓ Session successfully connected to target PDB
-
----
-
-## Screenshot 4: Privileges Granted
+## Privileges Granted
 
 (../screenshots/phase4_database_creation/04_privileges_granted.png)<img width="471" height="535" alt="phase IV scr4" src="https://github.com/user-attachments/assets/6b54afcd-315d-4218-bee8-bcf7a0de94a6" />
 
@@ -326,9 +317,9 @@ GRANT CREATE TRIGGER TO crop_admin;
 GRANT CREATE TYPE TO crop_admin;
 GRANT CREATE SYNONYM TO crop_admin;
 GRANT UNLIMITED TABLESPACE TO crop_admin;
-```
 
-### Privilege Summary Table
+
+### Privilege Table
 
 | Privilege | Purpose | Status |
 |-----------|---------|--------|
@@ -342,9 +333,9 @@ GRANT UNLIMITED TABLESPACE TO crop_admin;
 | CREATE SYNONYM | Create synonyms | ✓ Granted |
 | UNLIMITED TABLESPACE | No space restrictions | ✓ Granted |
 
----
 
-## Screenshot 5: Tablespaces Created
+
+##  Tablespaces Created
 
 (../screenshots/phase4_database_creation/05_tablespaces_created.png)<img width="404" height="526" alt="phase IV scr5" src="https://github.com/user-attachments/assets/51ea42d9-3d54-4171-98dd-4a3fd76e454e" />
 
@@ -364,7 +355,7 @@ NEXT 10M
 MAXSIZE UNLIMITED
 EXTENT MANAGEMENT LOCAL
 SEGMENT SPACE MANAGEMENT AUTO;
-```
+
 
 #### Index Tablespace
 ```sql
@@ -388,7 +379,7 @@ NEXT 5M
 MAXSIZE UNLIMITED;
 ```
 
-### Tablespace Summary
+### Tablespace 
 
 | Tablespace Name | Type | Initial Size | Autoextend | Purpose |
 |----------------|------|--------------|------------|---------|
@@ -396,9 +387,8 @@ MAXSIZE UNLIMITED;
 | crop_index_ts | PERMANENT | 50MB | ON (5MB increments) | Store indexes |
 | crop_temp_ts | TEMPORARY | 50MB | ON (5MB increments) | Sorting operations |
 
----
 
-## Screenshot 6: Tablespace Verification
+##  Tablespace Verification
 
 (../screenshots/phase4_database_creation/06_tablespace_verification.png)<img width="599" height="506" alt="phase IV scr6" src="https://github.com/user-attachments/assets/381bc565-131f-4600-9040-f4a593d6b0a2" />
 
@@ -413,7 +403,6 @@ Verification queries confirming all tablespaces are ONLINE and properly configur
 SELECT tablespace_name, status, contents 
 FROM dba_tablespaces 
 WHERE tablespace_name LIKE 'CROP%';
-```
 
 #### Results
 | Tablespace Name | Status | Contents |
@@ -426,8 +415,7 @@ WHERE tablespace_name LIKE 'CROP%';
 ```sql
 SELECT username, default_tablespace, temporary_tablespace
 FROM dba_users
-WHERE username = 'CROP_ADMIN';
-```
+WHERE username = 'CROP_ADMIN'
 
 #### User Tablespace Assignment
 ```sql
@@ -435,8 +423,7 @@ ALTER USER crop_admin
 DEFAULT TABLESPACE crop_data_ts
 TEMPORARY TABLESPACE crop_temp_ts
 QUOTA UNLIMITED ON crop_data_ts
-QUOTA UNLIMITED ON crop_index_ts;
-```
+QUOTA UNLIMITED ON crop_index_t
 
 #### Results
 | Username | Default Tablespace | Temporary Tablespace |
@@ -445,9 +432,9 @@ QUOTA UNLIMITED ON crop_index_ts;
 
 **Status:** ✓ All tablespaces ONLINE and user properly configured
 
----
 
-## Screenshot 7: Memory Configuration
+
+## Memory Configuration
 
 (../screenshots/phase4_database_creation/07_memory_configuration.png)<img width="863" height="429" alt="phase IV scr7" src="https://github.com/user-attachments/assets/f1656ebf-fc60-44ef-bde0-1db50791b21c" />
 
@@ -458,14 +445,14 @@ Shows memory parameter configuration and archive log mode status. The PGA aggreg
 ### Memory Configuration Command
 ```sql
 ALTER SYSTEM SET pga_aggregate_target = 256M SCOPE=BOTH;
-```
+
 
 ### Memory Verification Query
 ```sql
 SELECT name, value
 FROM v$parameter
 WHERE name IN ('sga_target', 'pga_aggregate_target');
-```
+
 
 ### Memory Settings Results
 
@@ -477,7 +464,7 @@ WHERE name IN ('sga_target', 'pga_aggregate_target');
 ### Archive Log Status
 ```sql
 ARCHIVE LOG LIST;
-```
+
 
 ### Archive Configuration
 
@@ -490,8 +477,6 @@ ARCHIVE LOG LIST;
 | Current log sequence | 29 | Active log number |
 
 **Note:** Archive logging is disabled for the development environment but should be enabled in production for point-in-time recovery.
-
----
 
 ## Database Setup Summary
 
