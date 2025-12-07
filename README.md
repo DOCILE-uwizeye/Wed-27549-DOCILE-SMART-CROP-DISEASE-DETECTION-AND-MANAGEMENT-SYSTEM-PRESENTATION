@@ -218,89 +218,136 @@ DRAW I.O
 
 # Phase IV: Database Creation & Configuration
 ## Project: Smart Crop Disease Detection & Management System
- **PDB Name** wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db 
- **Admin Username**  crop_admin 
-**Admin Password**  docile
- **Oracle Version** Oracle Database 21c Express Edition Release 21.0.0.0.0 
-**CDB Container** CDB$ROOT
+
+**Student:** Docile (ID: 27549)  
+**Group:** Wednesday  
+**Date:** December 7, 2025
+
+---
+
+## Screenshot 1: Database Creation
+
+(../screenshots/phase4_database_creation/01_database_created.png)<img width="938" height="678" alt="phase IV scr1" src="https://github.com/user-attachments/assets/ee6fce90-714b-4f3c-b01e-bc6c179a3564" />
+
+
+---
+
+## Screenshot 2: Pluggable Databases Verification
+
+(../screenshots/phase4_database_creation/02_pluggable_databases.png)<img width="847" height="504" alt="phase IV scr2" src="https://github.com/user-attachments/assets/d90424fa-1225-4017-9e56-9b8157c905d8" />
+
+
+---
+
+## Screenshot 3: Session Connected to Database
+
+(../screenshots/phase4_database_creation/03_session_connected.png)<img width="872" height="271" alt="phase IV scr3" src="https://github.com/user-attachments/assets/f1f27f1d-c54c-4017-a376-3adb61e74c5d" />
+
+
+---
+
+## Screenshot 4: Privileges Granted
+
+(../screenshots/phase4_database_creation/04_privileges_granted.png)<img width="471" height="535" alt="phase IV scr4" src="https://github.com/user-attachments/assets/713e1028-52bf-4a31-91e7-637ba4ebe048" />
+
+
+---
+
+## Screenshot 5: Tablespaces Created
+
+(../screenshots/phase4_database_creation/05_tablespaces_created.png)<img width="404" height="526" alt="phase IV scr5" src="https://github.com/user-attachments/assets/4df94b44-7485-4999-9093-425e8b9998d4" />
+
+
+---
+
+## Screenshot 6: Tablespace Verification
+
+(../screenshots/phase4_database_creation/06_tablespace_verification.png)<img width="599" height="506" alt="phase IV scr6" src="https://github.com/user-attachments/assets/8f84a854-c474-4f45-93a2-098d278e4f94" />
 
 
 
-## 3. Pluggable Database Creation
+##  Memory Configuration
 
-### **Connect to Container Database & Create PDB**
+(../screenshots/phase4_database_creation/07_memory_configuration.png)<img width="863" height="429" alt="phase IV scr7" src="https://github.com/user-attachments/assets/5dea99aa-88f6-401e-8835-67b449857ceb" />
+
+
+---
+
+## 1. Database Creation Scripts
+
+### **Pluggable Database Creation**
 ```sql
--- Connect as SYSDBA
-sqlplus / as sysdba
+DROP PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db 
+INCLUDING DATAFILES;
 
--- Set container to root
-ALTER SESSION SET CONTAINER = CDB$ROOT;
-SHOW CON_NAME;
-
--- Drop existing PDB (cleanup)
-DROP PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
-  INCLUDING DATAFILES;
-
--- Create new PDB
 CREATE PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
-  ADMIN USER crop_admin IDENTIFIED BY docile
-  FILE_NAME_CONVERT = ('pdbseed', 'wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db');
+ADMIN USER crop_admin IDENTIFIED BY docile
+FILE_NAME_CONVERT = ('pdbseed', 'wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db');
 
--- Open PDB
 ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db OPEN;
 
-
-**Results:**
-- `Pluggable database dropped.`
-- `Pluggable database created.`
-- `Pluggable database altered.`
-
-(./images/PhaseIV_01.png)<img width="938" height="678" alt="phase IV scr1" src="https://github.com/user-attachments/assets/c6193309-7c97-4115-844d-1ee4609ecc04" />
-
-
-
-
-
-### **Save PDB State & Verify**
-```sql
--- Save state for auto-start
 ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db SAVE STATE;
-
--- Verify PDB status
-SELECT name, open_mode FROM v$pdbs;
 ```
 
-**Verification Results:**
-| NAME | OPEN_MODE |
-|------|-----------|
-| PDB$SEED | READ ONLY |
-| AI_TO_DELETE_PDB_27292 | MOUNTED |
-| DO_PDB_27549 | READ WRITE |
-| AI_PDB_27292 | READ WRITE |
-| WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB | READ WRITE |
-
-(./images/PhaseIV_02.png)<img width="847" height="504" alt="phase IV scr2" src="https://github.com/user-attachments/assets/f1727b15-4c2a-4997-b3ad-d4f8b3de284d" />
-
-
-
-## 4. Switch to PDB Context
-
-### **Connect to PDB**
+### **Database Verification**
 ```sql
+SELECT name, open_mode FROM v$pdbs;
+
 ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
+
 SHOW CON_NAME;
 ```
 
-**Result:** `WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB`
+---
 
-(./images/_PhaseIV_03.png)<img width="872" height="271" alt="phase IV scr3" src="https://github.com/user-attachments/assets/7219c699-2ecc-4ab6-ab77-470c917ebe04" />
+## 2. Tablespace Configuration
 
+### **Data Tablespace**
+```sql
+CREATE TABLESPACE crop_data_ts
+DATAFILE 'crop_data_ts.dbf'
+SIZE 100M
+AUTOEXTEND ON
+NEXT 10M
+MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL
+SEGMENT SPACE MANAGEMENT AUTO;
+```
 
+### **Index Tablespace**
+```sql
+CREATE TABLESPACE crop_index_ts
+DATAFILE 'crop_index_ts.dbf'
+SIZE 50M
+AUTOEXTEND ON
+NEXT 5M
+MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL
+SEGMENT SPACE MANAGEMENT AUTO;
+```
 
+### **Temporary Tablespace**
+```sql
+CREATE TEMPORARY TABLESPACE crop_temp_ts
+TEMPFILE 'crop_temp_ts.tmp'
+SIZE 50M
+AUTOEXTEND ON
+NEXT 5M
+MAXSIZE UNLIMITED;
+```
 
-## 5. User Privileges Configuration
+### **Tablespace Verification**
+```sql
+SELECT tablespace_name, status, contents 
+FROM dba_tablespaces 
+WHERE tablespace_name LIKE 'CROP%';
+```
 
-### **Grant Super Admin Privileges**
+---
+
+## 3. User Setup Documentation
+
+### **Privileges Granted**
 ```sql
 GRANT CREATE SESSION TO crop_admin;
 GRANT CREATE TABLE TO crop_admin;
@@ -311,204 +358,73 @@ GRANT CREATE TRIGGER TO crop_admin;
 GRANT CREATE TYPE TO crop_admin;
 GRANT CREATE SYNONYM TO crop_admin;
 GRANT UNLIMITED TABLESPACE TO crop_admin;
+```
 
-**Privileges Granted:**
-| Privilege | Purpose |
-|-----------|---------|
-| CREATE SESSION | Login access to database |
-| CREATE TABLE | Create data tables |
-| CREATE VIEW | Create database views |
-| CREATE PROCEDURE | Create stored procedures |
-| CREATE SEQUENCE | Create auto-increment sequences |
-| CREATE TRIGGER | Create database triggers |
-| CREATE TYPE | Create custom data types |
-| CREATE SYNONYM | Create object aliases |
-| UNLIMITED TABLESPACE | Unrestricted storage access |
-
-**Result:** `Grant succeeded.` (for each privilege)
-
-(./images/PhaseIV_04.png)<img width="471" height="535" alt="phase IV scr4" src="https://github.com/user-attachments/assets/39117ec1-ff6d-40fb-88aa-4fea70f97e9b" />
-
-
-
-
-## 6. Tablespace Creation
-
-### **Create Data Tablespace (crop_data_ts)**
-```sql
-CREATE TABLESPACE crop_data_ts
-  DATAFILE 'crop_data_ts.dbf'
-  SIZE 100M
-  AUTOEXTEND ON
-  NEXT 10M
-  MAXSIZE UNLIMITED
-  EXTENT MANAGEMENT LOCAL
-  SEGMENT SPACE MANAGEMENT AUTO;
-
-
-### **Create Index Tablespace (crop_index_ts)**
-```sql
-CREATE TABLESPACE crop_index_ts
-  DATAFILE 'crop_index_ts.dbf'
-  SIZE 50M
-  AUTOEXTEND ON
-  NEXT 5M
-  MAXSIZE UNLIMITED
-  EXTENT MANAGEMENT LOCAL
-  SEGMENT SPACE MANAGEMENT AUTO;
-
-
-### **Create Temporary Tablespace (crop_temp_ts)**
-```sql
-CREATE TEMPORARY TABLESPACE crop_temp_ts
-  TEMPFILE 'crop_temp_ts.tmp'
-  SIZE 50M
-  AUTOEXTEND ON
-  NEXT 5M
-  MAXSIZE UNLIMITED;
-
-
-**Tablespace Configuration:**
-| Tablespace | Size | Autoextend | Next | Max Size |
-|-----------|------|------------|------|----------|
-| crop_data_ts | 100MB | ON | 10MB | UNLIMITED |
-| crop_index_ts | 50MB | ON | 5MB | UNLIMITED |
-| crop_temp_ts | 50MB | ON | 5MB | UNLIMITED |
-
-**Result:** `Tablespace created.` (for each)
-
-(./images/PhaseIV_05.png)<img width="404" height="526" alt="phase IV scr5" src="https://github.com/user-attachments/assets/e03da63e-2ea8-46f9-990d-8e622f5b63d7" />
-
-
-
-
-## 7. Tablespace & User Verification
-
-### **Verify Tablespaces**
-```sql
-SELECT tablespace_name, status, contents
-FROM dba_tablespaces
-WHERE tablespace_name LIKE 'CROP%';
-
-
-**Tablespace Status:**
-| TABLESPACE_NAME | STATUS | CONTENTS |
-|----------------|--------|----------|
-| CROP_DATA_TS | ONLINE | PERMANENT |
-| CROP_INDEX_TS | ONLINE | PERMANENT |
-| CROP_TEMP_TS | ONLINE | TEMPORARY |
-
-### **Assign Tablespaces to User**
+### **Tablespace Assignment**
 ```sql
 ALTER USER crop_admin
-  DEFAULT TABLESPACE crop_data_ts
-  TEMPORARY TABLESPACE crop_temp_ts
-  QUOTA UNLIMITED ON crop_data_ts
-  QUOTA UNLIMITED ON crop_index_ts;
+DEFAULT TABLESPACE crop_data_ts
+TEMPORARY TABLESPACE crop_temp_ts
+QUOTA UNLIMITED ON crop_data_ts
+QUOTA UNLIMITED ON crop_index_ts;
+```
 
-
-**Result:** `User altered.`
-
-### **Verify User Configuration**
+### **User Verification**
 ```sql
 SELECT username, default_tablespace, temporary_tablespace
 FROM dba_users
 WHERE username = 'CROP_ADMIN';
+```
 
+---
 
-**User Configuration:**
-| USERNAME | DEFAULT_TABLESPACE | TEMPORARY_TABLESPACE |
-|----------|-------------------|---------------------|
-| CROP_ADMIN | CROP_DATA_TS | CROP_TEMP_TS |
+## 4. Memory Configuration
 
-(./images/PhaseIV_06.png)<img width="599" height="506" alt="phase IV scr6" src="https://github.com/user-attachments/assets/04ae6e6e-8d10-4a01-95b4-0362c3ffc5eb" />
-
-
-
-
-## 8. Memory Parameters & Archive Logging
-
-### **Configure PGA Memory**
+### **PGA Configuration**
 ```sql
 ALTER SYSTEM SET pga_aggregate_target = 256M SCOPE=BOTH;
 ```
 
-**Result:** `System altered.`
-
-### **Verify Memory Parameters**
+### **Memory Verification**
 ```sql
 SELECT name, value
 FROM v$parameter
 WHERE name IN ('sga_target', 'pga_aggregate_target');
+```
 
-
-**Memory Configuration:**
-| NAME | VALUE | Description |
-|------|-------|-------------|
-| sga_target | 536870912 (~512MB) | System Global Area |
-| pga_aggregate_target | 268435456 (~256MB) | Program Global Area |
-
-### **Check Archive Log Status**
+### **Archive Log Status**
 ```sql
 ARCHIVE LOG LIST;
 ```
 
-**Archive Configuration:**
-```
-Database log mode              No Archive Mode
-Automatic archival             Disabled
-Archive destination            C:\app\HP-\product\21c\homes\OraDBI21Home1\RDBMS
-Oldest online log sequence     27
-Current log sequence           29
+---
 
+## 5. Database Setup Summary
 
-| Setting | Value |
-|---------|-------|
-| Database log mode | No Archive Mode |
-| Automatic archival | Disabled |
-| Current log sequence | 29 |
+### Naming Convention Compliance
+| Component | Value |
+|-----------|-------|
+| Group Name | wed |
+| Student ID | 27549 |
+| First Name | docile |
+| Project Name | smartcropdiseasedetectionandmanagementsystem |
+| **Full Database Name** | **wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db** |
 
-**Note:** Archive logging currently disabled for development environment.
+### Admin User Details
+| Attribute | Value |
+|-----------|-------|
+| Username | crop_admin |
+| Password | docile |
+| Privileges | Super admin (all CREATE privileges) |
 
-(./images/_PhaseIV_07.png)<img width="863" height="429" alt="phase IV scr7" src="https://github.com/user-attachments/assets/84aceddd-7e8d-4966-9316-709286931d8b" />
+### Tablespace Configuration
+| Tablespace | Type | Size | Autoextend |
+|-----------|------|------|-----------|
+| crop_data_ts | PERMANENT | 100MB | ON (10MB increments) |
+| crop_index_ts | PERMANENT | 50MB | ON (5MB increments) |
+| crop_temp_ts | TEMPORARY | 50MB | ON (5MB increments) |
 
-
-
-
-## Complete Configuration Summary
-
-### **Final Database Setup**
-| Component | Configuration | Status |
-|-----------|--------------|--------|
-| PDB Name | wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db | ✅ |
-| Admin User | crop_admin (password: docile) | ✅ |
-| Super Admin Privileges | All CREATE privileges granted | ✅ |
-| Data Tablespace | 100MB, autoextend 10MB, UNLIMITED | ✅ |
-| Index Tablespace | 50MB, autoextend 5MB, UNLIMITED | ✅ |
-| Temp Tablespace | 50MB, autoextend 5MB, UNLIMITED | ✅ |
-| SGA Target | 512MB | ✅ |
-| PGA Target | 256MB | ✅ |
-| Archive Logging | Disabled (development) | ⚠️ |
-| Database Status | OPERATIONAL | ✅ |
-
-
-
-## MIS Functions Supported
-
-- Centralized data storage with optimized performance
-- Scalable storage management with autoextend
-- Memory optimization for concurrent users
-- Foundation for transaction processing
-- Ready for application deployment
-
-
-
-##  Organizational Impact
-
-- Ready for immediate application deployment
-- Supports high-performance data operations
-- Provides secure, managed database environment
-- Enables future BI and reporting capabilities
-
-
-
+### Memory Parameters
+| Parameter | Value |
+|-----------|-------|
+| S
