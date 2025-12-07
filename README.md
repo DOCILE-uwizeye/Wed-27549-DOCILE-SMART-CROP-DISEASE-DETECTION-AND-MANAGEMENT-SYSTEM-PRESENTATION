@@ -217,54 +217,39 @@ DRAW I.O
 (./images/database_schema.png)<img width="1358" height="666" alt="DDI3" src="https://github.com/user-attachments/assets/efe0b0cf-d5c3-44af-ae97-b0956ca328f5" />
 
 # Phase IV: Database Creation & Configuration
-## Project: Smart Crop Disease Detection & Management System
 
-**Student:** Docile (ID: 27549)  
-**Group:** Wednesday  
-**Date:** December 7, 2025
-
----
-
-## Screenshot 1: Database Creation
+##  Database Creation
 
 (../screenshots/phase4_database_creation/01_database_created.png)<img width="938" height="678" alt="phase IV scr1" src="https://github.com/user-attachments/assets/ee6fce90-714b-4f3c-b01e-bc6c179a3564" />
 
 
----
 
-## Screenshot 2: Pluggable Databases Verification
+
+##  Pluggable Databases Verification
 
 (../screenshots/phase4_database_creation/02_pluggable_databases.png)<img width="847" height="504" alt="phase IV scr2" src="https://github.com/user-attachments/assets/d90424fa-1225-4017-9e56-9b8157c905d8" />
 
 
----
 
-## Screenshot 3: Session Connected to Database
+
+##  Session Connected to Database
 
 (../screenshots/phase4_database_creation/03_session_connected.png)<img width="872" height="271" alt="phase IV scr3" src="https://github.com/user-attachments/assets/f1f27f1d-c54c-4017-a376-3adb61e74c5d" />
 
 
----
-
-## Screenshot 4: Privileges Granted
+##  Privileges Granted
 
 (../screenshots/phase4_database_creation/04_privileges_granted.png)<img width="471" height="535" alt="phase IV scr4" src="https://github.com/user-attachments/assets/713e1028-52bf-4a31-91e7-637ba4ebe048" />
 
 
----
-
-## Screenshot 5: Tablespaces Created
+##  Tablespaces Created
 
 (../screenshots/phase4_database_creation/05_tablespaces_created.png)<img width="404" height="526" alt="phase IV scr5" src="https://github.com/user-attachments/assets/4df94b44-7485-4999-9093-425e8b9998d4" />
 
 
----
-
-## Screenshot 6: Tablespace Verification
+##  Tablespace Verification
 
 (../screenshots/phase4_database_creation/06_tablespace_verification.png)<img width="599" height="506" alt="phase IV scr6" src="https://github.com/user-attachments/assets/8f84a854-c474-4f45-93a2-098d278e4f94" />
-
-
 
 ##  Memory Configuration
 
@@ -418,7 +403,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Total Records Inserted:** 10
 ```sql
 -- Farmers
-(https://user-images.githubusercontent.com/12345/image.png)<img width="1198" height="680" alt="phase V scr11" src="https://github.com/user-attachments/assets/52eb9c18-4f38-421e-865a-3aee6bcf501b" />
+(https://user-images.githubusercontent.com/12345/image.png)<img width="1198" height="680" alt="phase V scr11" src="https://github.com/user-attachments/assets/5d030edb-62f6-4ec8-80fb-e95d336bab3c" />
+
 
 
 
