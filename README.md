@@ -429,52 +429,7 @@ ARCHIVE LOG LIST;
 |-----------|-------|
 | S
 # PHASE V: TABLE IMPLEMENTATION & DATA INSERTION
-## Smart Crop Disease Detection and Management System
-
----
-
-## 📋 PROJECT INFORMATION
-
-| Field | Details |
-|-------|---------|
-| **Student Name** | Docile |
-| **Student ID** | 27549 |
-| **Group** | Wednesday |
-| **Database Name** | WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB |
-| **Project Title** | Smart Crop Disease Detection and Management System |
-| **Phase** | V - Table Implementation & Data Insertion |
-| **Submission Date** | December 7, 2025 |
-
----
-
-## 📑 TABLE OF CONTENTS
-
-1. [Overview](#overview)
-2. [Table Structures](#table-structures)
-3. [Data Insertion Scripts](#data-insertion-scripts)
-4. [Data Validation Queries](#data-validation-queries)
-5. [Sample Data Display](#sample-data-display)
-6. [Screenshots Section](#screenshots-section)
-
----
-
-## 🎯 OVERVIEW
-
-This phase implements the physical database structure with realistic test data for the Smart Crop Disease Detection system. All tables are created with proper constraints, indexes, and sequences. Data represents actual agricultural disease scenarios in Rwanda.
-
-### Requirements Met:
-- ✅ All entities converted to tables
-- ✅ Oracle data types used correctly
-- ✅ Primary Keys (PKs) and Foreign Keys (FKs) enforced
-- ✅ Indexes created appropriately
-- ✅ Constraints set (NOT NULL, UNIQUE, CHECK, DEFAULT)
-- ✅ 100+ realistic rows per main table
-- ✅ Edge cases and null values included
-- ✅ Data integrity verified
-
----
-
-## 🗄️ TABLE STRUCTURES
+##  TABLE STRUCTURES
 
 ### Table 1: USERS
 
@@ -657,7 +612,7 @@ CREATE INDEX idx_scan_crop ON scans(crop_id);
 
 ---
 
-## 📊 DATA INSERTION SCRIPTS
+##  DATA INSERTION SCRIPTS
 
 ### Sample Data: USERS Table
 
@@ -758,7 +713,7 @@ COMMIT;
 
 ---
 
-## ✅ DATA VALIDATION QUERIES
+##  DATA VALIDATION QUERIES
 
 ### Query 1: Count Records in All Tables
 ```sql
@@ -916,7 +871,7 @@ WHERE (SELECT COUNT(*) FROM recommendations r WHERE r.disease_id = d.disease_id)
 ORDER BY rec_count DESC;
 ```
 
----
+
 
 ### Query 10: Data Completeness Check
 ```sql
@@ -934,211 +889,71 @@ FROM scans
 WHERE confidence_score < 50;
 ```
 
----
 
-## 📸 SCREENSHOTS SECTION
+## SCREENSHOTS SECTION
 
 ### Screenshot 1: Table Structures
 **File Location:** `screenshots/phase5/01_table_structures.png`
 
 **Description:** Shows DESC command output for all 5 tables displaying columns, data types, and constraints
 
-**What to Capture:**
-```sql
-DESC users;
-DESC crop_types;
-DESC disease_profiles;
-DESC recommendations;
-DESC scans;
-```
 
----
 
 ### Screenshot 2: Users Data Sample
 **File Location:** `screenshots/phase5/02_users_data.png`
 
 **Description:** Display first 10 user records
 
-**Query Used:**
-```sql
-SELECT * FROM users ORDER BY user_id;
-```
 
----
+
 
 ### Screenshot 3: Crop Types Data
 **File Location:** `screenshots/phase5/03_crop_types_data.png`
 
 **Description:** Display all crop types
 
-**Query Used:**
-```sql
-SELECT * FROM crop_types ORDER BY crop_id;
-```
 
----
 
 ### Screenshot 4: Disease Profiles Sample
 **File Location:** `screenshots/phase5/04_disease_profiles.png`
 
 **Description:** Display first 10 disease records
 
-**Query Used:**
-```sql
-SELECT disease_id, disease_name, severity_level, created_date
-FROM disease_profiles
-WHERE ROWNUM <= 10
-ORDER BY disease_id;
-```
 
----
 
 ### Screenshot 5: Scans Data Sample
 **File Location:** `screenshots/phase5/05_scans_data.png`
 
 **Description:** Display scan records with details
 
-**Query Used:**
-```sql
-SELECT scan_id, user_id, detected_disease, confidence_score, 
-       scan_status, scan_date, crop_id
-FROM scans
-WHERE ROWNUM <= 10
-ORDER BY scan_id;
-```
-
----
-
 ### Screenshot 6: Recommendations Data
 **File Location:** `screenshots/phase5/06_recommendations_data.png`
 
 **Description:** Display recommendation records
-
-**Query Used:**
-```sql
-SELECT rec_id, disease_id, rec_type, 
-       SUBSTR(recommendation, 1, 50) || '...' as recommendation_preview
-FROM recommendations
-WHERE ROWNUM <= 10
-ORDER BY rec_id;
-```
-
----
 
 ### Screenshot 7: Data Validation - Row Counts
 **File Location:** `screenshots/phase5/07_row_counts.png`
 
 **Description:** Shows count of records in all tables
 
-**Query Used:**
-```sql
-SELECT 'USERS' as table_name, COUNT(*) as row_count FROM users
-UNION ALL
-SELECT 'CROP_TYPES', COUNT(*) FROM crop_types
-UNION ALL
-SELECT 'DISEASE_PROFILES', COUNT(*) FROM disease_profiles
-UNION ALL
-SELECT 'SCANS', COUNT(*) FROM scans
-UNION ALL
-SELECT 'RECOMMENDATIONS', COUNT(*) FROM recommendations
-ORDER BY table_name;
-```
 
----
 
 ### Screenshot 8: Foreign Key Test
 **File Location:** `screenshots/phase5/08_foreign_key_test.png`
 
 **Description:** Shows join between scans, users, and diseases
 
-**Query Used:**
-```sql
-SELECT 
-    s.scan_id,
-    u.name as farmer_name,
-    d.disease_name,
-    s.confidence_score,
-    s.scan_status
-FROM scans s
-JOIN users u ON s.user_id = u.user_id
-LEFT JOIN disease_profiles d ON s.detected_disease = d.disease_id
-WHERE ROWNUM <= 5;
-```
 
----
 
 ### Screenshot 9: Aggregation Query
 **File Location:** `screenshots/phase5/09_aggregation_query.png`
 
 **Description:** Shows scans per user with statistics
 
-**Query Used:**
-```sql
-SELECT 
-    u.name,
-    COUNT(s.scan_id) as total_scans,
-    ROUND(AVG(s.confidence_score), 2) as avg_confidence
-FROM users u
-LEFT JOIN scans s ON u.user_id = s.user_id
-GROUP BY u.user_id, u.name
-ORDER BY total_scans DESC;
-```
-
----
-
 ### Screenshot 10: Edge Cases - Failed Scans
 **File Location:** `screenshots/phase5/10_edge_cases.png`
 
 **Description:** Shows failed scans and low confidence cases
-
-**Query Used:**
-```sql
-SELECT scan_id, user_id, confidence_score, scan_status, scan_date
-FROM scans
-WHERE scan_status = 'failed' OR confidence_score < 50
-ORDER BY scan_date DESC;
-```
-
----
-
-## 📝 PHASE V COMPLETION SUMMARY
-
-### ✅ Deliverables Completed:
-
-1. **Table Creation**
-   - ✅ 5 tables created with proper structure
-   - ✅ All constraints implemented (PK, FK, UNIQUE, CHECK, NOT NULL)
-   - ✅ Sequences created for auto-increment IDs
-   - ✅ Indexes created on foreign keys and frequently queried columns
-
-2. **Data Insertion**
-   - ✅ USERS: 10 records (farmers, admin, agronomist)
-   - ✅ CROP_TYPES: 10 records (major crops in Rwanda)
-   - ✅ DISEASE_PROFILES: 54 records (comprehensive disease database)
-   - ✅ SCANS: 25+ records (includes successful and failed scans)
-   - ✅ RECOMMENDATIONS: 30 records (multiple types per disease)
-
-3. **Data Quality**
-   - ✅ Realistic data based on actual agricultural scenarios
-   - ✅ Edge cases included (failed scans, low confidence, NULL values)
-   - ✅ Data integrity maintained (all FKs reference valid PKs)
-   - ✅ Mix of demographic distributions
-
-4. **Validation**
-   - ✅ 10+ validation queries created and tested
-   - ✅ Foreign key relationships verified
-   - ✅ Join operations tested
-   - ✅ Aggregations tested
-   - ✅ Subqueries tested
-
-5. **Documentation**
-   - ✅ Complete table descriptions
-   - ✅ All SQL scripts documented
-   - ✅ Screenshot placeholders created
-   - ✅ Expected outputs documented
-
----
-
 
 
 
