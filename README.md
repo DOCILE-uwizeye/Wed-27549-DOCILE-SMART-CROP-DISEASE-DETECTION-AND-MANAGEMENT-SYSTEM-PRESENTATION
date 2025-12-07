@@ -219,3 +219,507 @@ DRAW I.O
 
 
 (./images/database_schema.png)<img width="1358" height="666" alt="DDI3" src="https://github.com/user-attachments/assets/efe0b0cf-d5c3-44af-ae97-b0956ca328f5" />
+# Phase IV: Database Creation - Files for GitHub
+
+## Folder Structure to Add
+
+```
+database/
+├── scripts/
+│   ├── 01_database_creation.sql
+│   ├── 02_tablespace_configuration.sql
+│   ├── 03_user_setup.sql
+│   └── 04_memory_configuration.sql
+screenshots/
+└── phase4_database_creation/
+    ├── 01_database_created.png
+    ├── 02_pluggable_databases.png
+    ├── 03_session_connected.png
+    ├── 04_privileges_granted.png
+    ├── 05_tablespaces_created.png
+    ├── 06_tablespace_verification.png
+    ├── 07_memory_configuration.png
+    └── README.md
+```
+
+---
+
+## File 1: database/scripts/01_database_creation.sql
+
+```sql
+-- =====================================================
+-- PHASE IV: DATABASE CREATION
+-- Project: Smart Crop Disease Detection and Management System
+-- Student: Docile (ID: 27549) - Wednesday Group
+-- Database: wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
+-- Date: December 7, 2025
+-- =====================================================
+
+-- Connect as SYSDBA
+CONNECT / AS SYSDBA;
+
+-- Set container to root
+ALTER SESSION SET CONTAINER = CDB$ROOT;
+
+-- Display current container
+SHOW CON_NAME;
+
+-- Drop existing pluggable database if exists
+DROP PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db 
+INCLUDING DATAFILES;
+
+-- Create new pluggable database
+CREATE PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
+ADMIN USER crop_admin IDENTIFIED BY docile
+FILE_NAME_CONVERT = ('pdbseed', 'wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db');
+
+-- Open the pluggable database
+ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db OPEN;
+
+-- Save state for automatic startup
+ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db SAVE STATE;
+
+-- Verify database creation
+SELECT name, open_mode FROM v$pdbs;
+
+-- Connect to the new pluggable database
+ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
+
+-- Display current container name
+SHOW CON_NAME;
+
+PROMPT
+PROMPT =====================================================
+PROMPT Database created successfully!
+PROMPT Database: wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
+PROMPT Admin User: crop_admin
+PROMPT Password: docile
+PROMPT =====================================================
+```
+
+---
+
+## File 2: database/scripts/02_tablespace_configuration.sql
+
+```sql
+-- =====================================================
+-- TABLESPACE CONFIGURATION
+-- Project: Smart Crop Disease Detection and Management System
+-- Student: Docile (ID: 27549)
+-- =====================================================
+
+-- Connect to pluggable database as SYSDBA
+CONNECT / AS SYSDBA;
+ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
+
+-- Create data tablespace
+CREATE TABLESPACE crop_data_ts
+DATAFILE 'crop_data_ts.dbf'
+SIZE 100M
+AUTOEXTEND ON
+NEXT 10M
+MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL
+SEGMENT SPACE MANAGEMENT AUTO;
+
+-- Create index tablespace
+CREATE TABLESPACE crop_index_ts
+DATAFILE 'crop_index_ts.dbf'
+SIZE 50M
+AUTOEXTEND ON
+NEXT 5M
+MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL
+SEGMENT SPACE MANAGEMENT AUTO;
+
+-- Create temporary tablespace
+CREATE TEMPORARY TABLESPACE crop_temp_ts
+TEMPFILE 'crop_temp_ts.tmp'
+SIZE 50M
+AUTOEXTEND ON
+NEXT 5M
+MAXSIZE UNLIMITED;
+
+-- Verify tablespace creation
+SELECT tablespace_name, status, contents 
+FROM dba_tablespaces 
+WHERE tablespace_name LIKE 'CROP%';
+
+PROMPT
+PROMPT =====================================================
+PROMPT Tablespaces created successfully!
+PROMPT - crop_data_ts (100MB, autoextend)
+PROMPT - crop_index_ts (50MB, autoextend)
+PROMPT - crop_temp_ts (50MB, temporary)
+PROMPT =====================================================
+```
+
+---
+
+## File 3: database/scripts/03_user_setup.sql
+
+```sql
+-- =====================================================
+-- USER SETUP AND PRIVILEGES
+-- Project: Smart Crop Disease Detection and Management System
+-- Student: Docile (ID: 27549)
+-- =====================================================
+
+-- Connect as SYSDBA
+CONNECT / AS SYSDBA;
+ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
+
+-- Grant comprehensive privileges to crop_admin
+GRANT CREATE SESSION TO crop_admin;
+GRANT CREATE TABLE TO crop_admin;
+GRANT CREATE VIEW TO crop_admin;
+GRANT CREATE PROCEDURE TO crop_admin;
+GRANT CREATE SEQUENCE TO crop_admin;
+GRANT CREATE TRIGGER TO crop_admin;
+GRANT CREATE TYPE TO crop_admin;
+GRANT CREATE SYNONYM TO crop_admin;
+GRANT UNLIMITED TABLESPACE TO crop_admin;
+
+-- Set default and temporary tablespaces for crop_admin
+ALTER USER crop_admin
+DEFAULT TABLESPACE crop_data_ts
+TEMPORARY TABLESPACE crop_temp_ts
+QUOTA UNLIMITED ON crop_data_ts
+QUOTA UNLIMITED ON crop_index_ts;
+
+-- Verify user configuration
+SELECT username, default_tablespace, temporary_tablespace
+FROM dba_users
+WHERE username = 'CROP_ADMIN';
+
+PROMPT
+PROMPT =====================================================
+PROMPT User configuration completed!
+PROMPT Username: crop_admin
+PROMPT Default Tablespace: crop_data_ts
+PROMPT Temporary Tablespace: crop_temp_ts
+PROMPT All necessary privileges granted
+PROMPT =====================================================
+```
+
+---
+
+## File 4: database/scripts/04_memory_configuration.sql
+
+```sql
+-- =====================================================
+-- MEMORY CONFIGURATION
+-- Project: Smart Crop Disease Detection and Management System
+-- Student: Docile (ID: 27549)
+-- =====================================================
+
+-- Connect as SYSDBA
+CONNECT / AS SYSDBA;
+ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
+
+-- Set PGA aggregate target to 256MB
+ALTER SYSTEM SET pga_aggregate_target = 256M SCOPE=BOTH;
+
+-- Verify memory settings
+SELECT name, value
+FROM v$parameter
+WHERE name IN ('sga_target', 'pga_aggregate_target');
+
+-- Check archive log mode status
+ARCHIVE LOG LIST;
+
+PROMPT
+PROMPT =====================================================
+PROMPT Memory configuration completed!
+PROMPT PGA Aggregate Target: 256MB
+PROMPT Archive Log Mode: Check output above
+PROMPT =====================================================
+```
+
+---
+
+## File 5: screenshots/phase4_database_creation/README.md
+
+```markdown
+# Phase IV: Database Creation Screenshots
+
+This directory contains screenshots documenting the complete database creation process for the Smart Crop Disease Detection and Management System.
+
+## Screenshot Documentation
+
+### Screenshot 1: Database Creation
+
+![01_database_created.png](01_database_created.png)
+
+**Description:** Initial database creation command execution
+- Shows the DROP and CREATE PLUGGABLE DATABASE commands
+- Displays successful database creation message
+- Database name: `wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db`
+- Admin user: `crop_admin`
+- Password identifier: docile
+
+**Key SQL Commands:**
+```sql
+DROP PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db INCLUDING DATAFILES;
+CREATE PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
+ADMIN USER crop_admin IDENTIFIED BY docile
+FILE_NAME_CONVERT = ('pdbseed', 'wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db');
+ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db OPEN;
+```
+
+---
+
+### Screenshot 2: Pluggable Databases Verification
+
+![02_pluggable_databases.png](02_pluggable_databases.png)
+
+**Description:** Verification of pluggable database status
+- Query results from `v$pdbs` showing all pluggable databases
+- Confirms the new database is in READ WRITE mode
+- Shows database status and accessibility
+
+**Query Used:**
+```sql
+SELECT name, open_mode FROM v$pdbs;
+```
+
+**Results:**
+- PDB$SEED: READ ONLY
+- AI_TO_DELETE_PDB_27292: MOUNTED
+- DO_PDB_27549: READ WRITE
+- WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB: READ WRITE ✓
+
+---
+
+### Screenshot 3: Session Connected to Database
+
+![03_session_connected.png](03_session_connected.png)
+
+**Description:** Session connection to the new pluggable database
+- Demonstrates successful container switch
+- Shows current container name
+- Confirms session is connected to the correct PDB
+
+**Commands:**
+```sql
+ALTER SESSION SET CONTAINER = wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db;
+SHOW CON_NAME;
+```
+
+**Output:**
+- CON_NAME: WED_27549_DOCILE_SMARTCROPDISEASEDETECTIONANDMANAGEMENTSYSTEM_DB
+
+---
+
+### Screenshot 4: Privileges Granted
+
+![04_privileges_granted.png](04_privileges_granted.png)
+
+**Description:** Comprehensive privilege grants to crop_admin user
+- All necessary database object privileges assigned
+- Unlimited tablespace access granted
+- Ready for database development
+
+**Privileges Granted:**
+- CREATE SESSION ✓
+- CREATE TABLE ✓
+- CREATE VIEW ✓
+- CREATE PROCEDURE ✓
+- CREATE SEQUENCE ✓
+- CREATE TRIGGER ✓
+- CREATE TYPE ✓
+- CREATE SYNONYM ✓
+- UNLIMITED TABLESPACE ✓
+
+---
+
+### Screenshot 5: Tablespaces Created
+
+![05_tablespaces_created.png](05_tablespaces_created.png)
+
+**Description:** Tablespace creation with proper configuration
+- Data tablespace: crop_data_ts (100MB)
+- Index tablespace: crop_index_ts (50MB)
+- Temporary tablespace: crop_temp_ts (50MB)
+- All configured with autoextend enabled
+
+**Tablespace Configuration:**
+```sql
+CREATE TABLESPACE crop_data_ts
+DATAFILE 'crop_data_ts.dbf'
+SIZE 100M
+AUTOEXTEND ON
+NEXT 10M
+MAXSIZE UNLIMITED;
+
+CREATE TABLESPACE crop_index_ts
+DATAFILE 'crop_index_ts.dbf'
+SIZE 50M
+AUTOEXTEND ON
+NEXT 5M
+MAXSIZE UNLIMITED;
+
+CREATE TEMPORARY TABLESPACE crop_temp_ts
+TEMPFILE 'crop_temp_ts.tmp'
+SIZE 50M
+AUTOEXTEND ON
+NEXT 5M
+MAXSIZE UNLIMITED;
+```
+
+---
+
+### Screenshot 6: Tablespace Verification
+
+![06_tablespace_verification.png](06_tablespace_verification.png)
+
+**Description:** Verification of tablespace status and user configuration
+- Confirms all tablespaces are ONLINE
+- Shows tablespace types (PERMANENT/TEMPORARY)
+- Displays user's default and temporary tablespace assignments
+
+**Verification Query:**
+```sql
+SELECT tablespace_name, status, contents 
+FROM dba_tablespaces 
+WHERE tablespace_name LIKE 'CROP%';
+```
+
+**Results:**
+| Tablespace Name | Status | Contents |
+|----------------|--------|----------|
+| CROP_DATA_TS | ONLINE | PERMANENT |
+| CROP_INDEX_TS | ONLINE | PERMANENT |
+| CROP_TEMP_TS | ONLINE | TEMPORARY |
+
+**User Configuration:**
+```sql
+SELECT username, default_tablespace, temporary_tablespace
+FROM dba_users
+WHERE username = 'CROP_ADMIN';
+```
+
+**Results:**
+- Username: CROP_ADMIN
+- Default Tablespace: CROP_DATA_TS
+- Temporary Tablespace: CROP_TEMP_TS
+
+---
+
+### Screenshot 7: Memory Configuration
+
+![07_memory_configuration.png](07_memory_configuration.png)
+
+**Description:** Memory parameter configuration and archive log status
+- PGA aggregate target set to 256MB
+- Archive log mode status displayed
+- Memory configuration optimized for development
+
+**Memory Settings:**
+```sql
+ALTER SYSTEM SET pga_aggregate_target = 256M SCOPE=BOTH;
+```
+
+**Configuration Results:**
+- sga_target: 536870912 (512MB)
+- pga_aggregate_target: 268435456 (256MB)
+
+**Archive Log Status:**
+- Database log mode: No Archive Mode
+- Automatic archival: Disabled
+- Archive destination: (Not configured for development)
+- Oldest online log sequence: 27
+- Current log sequence: 29
+
+---
+
+## Phase IV Completion Checklist
+
+- [x] Pluggable database created with correct naming convention
+- [x] Admin user (crop_admin) created and configured
+- [x] Three tablespaces created (data, index, temporary)
+- [x] Tablespaces configured with autoextend
+- [x] All necessary privileges granted
+- [x] User default and temporary tablespaces assigned
+- [x] Memory parameters configured (PGA: 256MB)
+- [x] Archive log status verified
+- [x] All creation scripts documented
+- [x] Screenshots captured with visible database name
+- [x] README documentation completed
+
+## Technical Specifications
+
+**Database Version:** Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production  
+**Operating System:** Microsoft Windows (Version 10.0.19045.5466)  
+**SQL*Plus Version:** Release 21.0.0.0.0 - Production (Version 21.3.0.0.0)  
+**Creation Date:** December 4, 2025  
+**Project Due Date:** December 7, 2025
+
+---
+
+*All screenshots are original work by Docile (Student ID: 27549) for the Database Development with PL/SQL course at AUCA.*
+```
+
+---
+
+## How to Add to Your Existing GitHub Repository
+
+### Step 1: Create Folder Structure in VS Code
+
+In your existing repository, create these folders:
+```
+database/scripts/
+screenshots/phase4_database_creation/
+```
+
+### Step 2: Create the SQL Files
+
+Create these 4 files in `database/scripts/` folder:
+1. `01_database_creation.sql`
+2. `02_tablespace_configuration.sql`
+3. `03_user_setup.sql`
+4. `04_memory_configuration.sql`
+
+Copy the SQL content from above into each file.
+
+### Step 3: Add Your Screenshots
+
+Place your 7 screenshot images in `screenshots/phase4_database_creation/` with these exact names:
+- `01_database_created.png`
+- `02_pluggable_databases.png`
+- `03_session_connected.png`
+- `04_privileges_granted.png`
+- `05_tablespaces_created.png`
+- `06_tablespace_verification.png`
+- `07_memory_configuration.png`
+
+### Step 4: Create Screenshot README
+
+Create `README.md` in `screenshots/phase4_database_creation/` folder and copy the screenshot documentation content from above.
+
+### Step 5: Commit and Push to GitHub
+
+In VS Code terminal:
+
+```bash
+# Add all new files
+git add database/scripts/
+git add screenshots/phase4_database_creation/
+
+# Commit with message
+git commit -m "Phase IV: Database Creation and Configuration"
+
+# Push to GitHub
+git push origin main
+```
+
+### Step 6: Verify on GitHub
+
+Visit your repository on GitHub and verify:
+- ✅ `database/scripts/` folder contains 4 SQL files
+- ✅ `screenshots/phase4_database_creation/` contains 7 images + README.md
+- ✅ All files are properly formatted and visible
+
+---
+
+**That's it! Your Phase IV is now documented on GitHub.** 🎉
