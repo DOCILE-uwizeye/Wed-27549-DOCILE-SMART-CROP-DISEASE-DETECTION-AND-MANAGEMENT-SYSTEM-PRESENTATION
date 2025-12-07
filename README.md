@@ -255,7 +255,8 @@ ALTER PLUGGABLE DATABASE wed_27549_docile_smartcropdiseasedetectionandmanagement
 - `Pluggable database created.`
 - `Pluggable database altered.`
 
-(./images/PhaseIV_01.png)<img width="938" height="678" alt="phase IV scr1" src="https://github.com/user-attachments/assets/5a5efb2c-48c6-4cae-9592-facf56910d1d" />
+(./images/PhaseIV_01.png)<img width="938" height="678" alt="phase IV scr1" src="https://github.com/user-attachments/assets/c6193309-7c97-4115-844d-1ee4609ecc04" />
+
 
 
 
