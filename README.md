@@ -436,15 +436,9 @@ ARCHIVE LOG LIST;
 **Purpose:** Store user information (farmers, admins, agronomists)
 
 **SQL Creation Script:**
-```sql
-CREATE TABLE users (
-    user_id NUMBER(10) PRIMARY KEY,
-    name VARCHAR2(100) NOT NULL,
-    email VARCHAR2(100) UNIQUE NOT NULL,
-    password VARCHAR2(100) NOT NULL,
-    role VARCHAR2(20) NOT NULL CHECK (role IN ('farmer', 'admin', 'agronomist')),
-    created_date DATE DEFAULT SYSDATE
-);
+(https://github.com/yourrepo/.../image.png)![Uploading phase V scr1.png…]()
+
+
 
 CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 ```
