@@ -481,7 +481,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 - Scan ID: 1 | Disease: Tomato Late Blight | Confidence: 87.5%
 - PL/SQL procedure successfully completed.
 
-(screenshots/phase6_test5_cursor.png
+(screenshots/phase6_test5_cursor.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/3763c328-93f5-4b35-9c90-a7f305dcd025" />
+
 
 **Results:**
 
@@ -507,14 +508,6 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 
 ##  Verification of All Objects
-
-**Query:**
-```sql
-SELECT object_name, object_type, status
-FROM user_objects
-WHERE object_type IN ('TABLE','PROCEDURE','FUNCTION','PACKAGE','VIEW','SEQUENCE')
-ORDER BY object_type, object_name;
-```
 
 **All Objects Status:**
 
