@@ -833,7 +833,7 @@ FROM public_holidays
 ORDER BY holiday_date;
 
 
-(screenshots/06_public_holidays.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/344c8fc1-89e1-4cf3-891f-5cfb39849620" />
+(./images/Screenshot1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/35768507-458a-4bba-8598-e6c641b2c708" />
 
 
 **Result:**
