@@ -394,7 +394,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 | scan_status | VARCHAR2(20) | CHECK | Status (pending/completed/failed) |
 | crop_id | NUMBER(10) | FK | References crop_types |
 
----
+
 
 ##  DATA INSERTION SCRIPTS
 
@@ -427,11 +427,6 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 (https://user-images.githubusercontent.com/12345/image.png)<img width="1292" height="691" alt="phase V scr18" src="https://github.com/user-attachments/assets/bd1e5c3b-086a-453e-a53f-393582c01497" />
 
 # PHASE VI: Database Interaction & Transactions
-## Smart Crop Disease Detection & Management System
-
-**Student:** Docile (27549)  
-**Database:** wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
-
 
 
 ## Testing Results
@@ -439,7 +434,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 ### Test 1: Register User and Record Scan
 
 **Test Script:**
-(screenshots/phase6_test1_register_user.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/c566482a-f21e-4e82-a9d7-568f584fc1d9" />
+(screenshots/phase6_test1_register_user.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/fdf06fc4-c8aa-4516-903f-3037930da16b" />
+
 
 
 **Result:**
@@ -499,7 +495,7 @@ END;
 
 
 **Result:**
-- ✅ **Test 4: Package**
+-  Package**
 - User registered successfully with ID: 7
 - PL/SQL procedure successfully completed.
 
@@ -519,16 +515,14 @@ END;
 
 
 **Results:**
-- ✅ **Test 5: Cursor - Scan History for User 1**
+- **Test 5: Cursor - Scan History for User 1**
 - Scan ID: 9 | Disease: Tomato Late Blight | Confidence: 91.5%
 - Scan ID: 8 | Disease: Tomato Late Blight | Confidence: 89.3%
 - Scan ID: 2 | Disease: Tomato Late Blight | Confidence: 92.3%
 - Scan ID: 1 | Disease: Tomato Late Blight | Confidence: 87.5%
 - PL/SQL procedure successfully completed.
 
-![Test 5: Cursor](screenshots/phase6_test5_cursor.png)
-
-
+(screenshots/phase6_test5_cursor.png)
 
 ###  Views
 
