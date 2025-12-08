@@ -820,41 +820,9 @@ Verification of all database objects created in Phase V and Phase VI showing obj
 
 ##  Holiday Management
 
-### Public Holidays Table Creation
+### Public Holidays Table Creation and Insert holiday data
 
 **Purpose:** Store public holidays to enforce operation restrictions
-
-```sql
--- Create public holidays table
-CREATE TABLE public_holidays (
-    holiday_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    holiday_date DATE NOT NULL,
-    holiday_name VARCHAR2(100) NOT NULL,
-    CONSTRAINT uk_holiday_date UNIQUE (holiday_date)
-);
-```
-
-### Insert Holiday Data
-
-```sql
--- Insert upcoming public holidays
-INSERT INTO public_holidays (holiday_date, holiday_name)
-VALUES (TO_DATE('2025-12-25', 'YYYY-MM-DD'), 'Christmas Day');
-
-INSERT INTO public_holidays (holiday_date, holiday_name)
-VALUES (TO_DATE('2025-12-26', 'YYYY-MM-DD'), 'Boxing Day');
-
-INSERT INTO public_holidays (holiday_date, holiday_name)
-VALUES (TO_DATE('2026-01-01', 'YYYY-MM-DD'), 'New Year Day');
-
-INSERT INTO public_holidays (holiday_date, holiday_name)
-VALUES (TO_DATE('2026-01-04', 'YYYY-MM-DD'), 'Genocide Memorial Day');
-
-INSERT INTO public_holidays (holiday_date, holiday_name)
-VALUES (TO_DATE('2026-01-06', 'YYYY-MM-DD'), 'Epiphany');
-
-COMMIT;
-```
 
 ### Verification Query
 
@@ -863,132 +831,55 @@ COMMIT;
 SELECT holiday_id, holiday_date, holiday_name 
 FROM public_holidays 
 ORDER BY holiday_date;
-```
 
-**Screenshot Evidence:**
 
 (screenshots/06_public_holidays.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/5955ac68-5385-4e18-a989-436f2c05bf75" />
 
 
 **Result:**
-- ✅ 5 public holidays loaded
-- ✅ Dates cover upcoming month
-- ✅ Unique constraint on holiday_date enforced
+-  5 public holidays loaded
+- Dates cover upcoming month
+-  Unique constraint on holiday_date enforced
 
----
 
-## Step 2: Audit Log Table
+## Audit Log Table
 
-### Table Creation
+### Table Creation and Create Performance Indexes
 
 **Purpose:** Comprehensive audit trail for all database operations
 
-```sql
--- Create audit log table
-CREATE TABLE audit_log (
-    audit_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    table_name VARCHAR2(50) NOT NULL,
-    operation_type VARCHAR2(10) NOT NULL,
-    user_name VARCHAR2(100) NOT NULL,
-    operation_date DATE DEFAULT SYSDATE NOT NULL,
-    operation_day VARCHAR2(20) NOT NULL,
-    status VARCHAR2(20) NOT NULL,
-    error_message VARCHAR2(500),
-    ip_address VARCHAR2(50),
-    session_id NUMBER,
-    old_values CLOB,
-    new_values CLOB,
-    CONSTRAINT chk_operation CHECK (operation_type IN ('INSERT', 'UPDATE', 'DELETE')),
-    CONSTRAINT chk_status CHECK (status IN ('ALLOWED', 'DENIED'))
-);
-```
 
-### Create Performance Indexes
+(screenshots/01_audit_table_creation.png)<img width="740" height="569" alt="phase VII scr2" src="https://github.com/user-attachments/assets/1ada1205-c530-4bd1-82c2-943ab3c01c9e" />
 
-```sql
--- Create indexes for query performance
-CREATE INDEX idx_audit_date ON audit_log(operation_date);
-CREATE INDEX idx_audit_user ON audit_log(user_name);
-CREATE INDEX idx_audit_status ON audit_log(status);
-CREATE INDEX idx_audit_table ON audit_log(table_name);
-```
-
-**Screenshot Evidence:**
-
-![Audit Log Table Creation](screenshots/01_audit_table_creation.png)
 
 **Features Implemented:**
-- ✅ Auto-incrementing audit_id
-- ✅ Tracks table name and operation type
-- ✅ Captures user name and date/day
-- ✅ Records operation status (ALLOWED/DENIED)
-- ✅ Stores error messages for denied operations
-- ✅ Captures IP address and session ID
-- ✅ Preserves old and new values as CLOB
-- ✅ Check constraints enforce valid values
-- ✅ Performance indexes on key columns
+-  Auto-incrementing audit_id
+-  Tracks table name and operation type
+-  Captures user name and date/day
+-  Records operation status (ALLOWED/DENIED)
+-  Stores error messages for denied operations
+-  Captures IP address and session ID
+-  Preserves old and new values as CLOB
+-  Check constraints enforce valid values
+-  Performance indexes on key columns
 
----
 
-## Step 3: Audit Logging Function
+##  Audit Logging Function
 
 ### Function Implementation
 
 **Purpose:** Autonomous function to log all operations regardless of transaction outcome
 
-```sql
-CREATE OR REPLACE FUNCTION log_audit_event(
-    p_table_name IN VARCHAR2,
-    p_operation IN VARCHAR2,
-    p_status IN VARCHAR2,
-    p_error_msg IN VARCHAR2 DEFAULT NULL,
-    p_old_values IN CLOB DEFAULT NULL,
-    p_new_values IN CLOB DEFAULT NULL
-) RETURN NUMBER
-IS
-    PRAGMA AUTONOMOUS_TRANSACTION;
-    v_audit_id NUMBER;
-    v_ip_address VARCHAR2(50);
-    v_session_id NUMBER;
-BEGIN
-    BEGIN
-        v_ip_address := SYS_CONTEXT('USERENV', 'IP_ADDRESS');
-        v_session_id := SYS_CONTEXT('USERENV', 'SESSIONID');
-    EXCEPTION
-        WHEN OTHERS THEN
-            v_ip_address := 'UNKNOWN';
-            v_session_id := 0;
-    END;
-    
-    INSERT INTO audit_log (
-        table_name, operation_type, user_name, operation_date, operation_day,
-        status, error_message, ip_address, session_id, old_values, new_values
-    ) VALUES (
-        p_table_name, p_operation, USER, SYSDATE, TRIM(TO_CHAR(SYSDATE, 'DAY')),
-        p_status, p_error_msg, v_ip_address, v_session_id, p_old_values, p_new_values
-    ) RETURNING audit_id INTO v_audit_id;
-    
-    COMMIT;
-    RETURN v_audit_id;
-EXCEPTION
-    WHEN OTHERS THEN
-        ROLLBACK;
-        RETURN NULL;
-END log_audit_event;
-/
-```
+(screenshots/02_audit_function.png)<img width="735" height="688" alt="phase VII scr3" src="https://github.com/user-attachments/assets/dac3eae3-8472-4da6-8884-987dad6f70fa" />
 
-**Screenshot Evidence:**
-
-![Audit Logging Function](screenshots/02_audit_function.png)
 
 **Key Features:**
-- ✅ **PRAGMA AUTONOMOUS_TRANSACTION** - Logs persist even if main transaction rolls back
-- ✅ **Context Capture** - Retrieves IP_ADDRESS and SESSIONID from system
-- ✅ **Error Handling** - Gracefully handles context retrieval failures
-- ✅ **Parameter Flexibility** - Optional parameters for error messages and data changes
-- ✅ **Return Value** - Returns audit_id for reference
-- ✅ **Independent Commit** - Audit log commits separately from main transaction
+-  **PRAGMA AUTONOMOUS_TRANSACTION** - Logs persist even if main transaction rolls back
+-  **Context Capture** - Retrieves IP_ADDRESS and SESSIONID from system
+-  **Error Handling** - Gracefully handles context retrieval failures
+-  **Parameter Flexibility** - Optional parameters for error messages and data changes
+-  **Return Value** - Returns audit_id for reference
+-  **Independent Commit** - Audit log commits separately from main transaction
 
 **Function Parameters:**
 | Parameter | Type | Required | Purpose |
@@ -1005,46 +896,6 @@ END log_audit_event;
 ## Restriction Check Function
 
 ### Function Implementation
-
-**Purpose:** Validate whether operations are allowed based on day of week and holidays
-
-```sql
-CREATE OR REPLACE FUNCTION check_operation_allowed(
-    p_operation IN VARCHAR2,
-    p_table_name IN VARCHAR2
-) RETURN VARCHAR2
-IS
-    v_day VARCHAR2(20);
-    v_holiday_count NUMBER;
-    v_holiday_name VARCHAR2(100);
-BEGIN
-    -- Get current day of week
-    v_day := TRIM(TO_CHAR(SYSDATE, 'DAY'));
-    
-    -- Check if today is a public holiday
-    SELECT COUNT(*), MAX(holiday_name) 
-    INTO v_holiday_count, v_holiday_name
-    FROM public_holidays
-    WHERE holiday_date = TRUNC(SYSDATE);
-    
-    -- Block operations on weekdays (Monday-Friday)
-    IF v_day IN ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY') THEN
-        RETURN 'DENIED: ' || p_operation || ' on ' || p_table_name || 
-               ' NOT ALLOWED on WEEKDAYS (' || v_day || ')';
-    END IF;
-    
-    -- Block operations on public holidays
-    IF v_holiday_count > 0 THEN
-        RETURN 'DENIED: ' || p_operation || ' on ' || p_table_name || 
-               ' NOT ALLOWED on PUBLIC HOLIDAY (' || v_holiday_name || ')';
-    END IF;
-    
-    -- Operation is allowed (weekend and not a holiday)
-    RETURN 'ALLOWED';
-END check_operation_allowed;
-/
-
-
 **Business Logic:**
 
 
@@ -1074,76 +925,14 @@ END check_operation_allowed;
 
 ## S Simple Triggers
 
-### Trigger on USERS Table
+### Trigger on USERS Table , Trigger on SCANS Table and Compound Trigger on DISEASE_PROFILES
 
 **Purpose:** Enforce operation restrictions on USERS table
-
-```sql
-CREATE OR REPLACE TRIGGER trg_users_restrict
-BEFORE INSERT OR UPDATE OR DELETE ON users
-FOR EACH ROW
-DECLARE
-    v_check_result VARCHAR2(500);
-    v_operation VARCHAR2(10);
-    v_audit_id NUMBER;
-BEGIN
-    -- Determine operation type
-    IF INSERTING THEN 
-        v_operation := 'INSERT';
-    ELSIF UPDATING THEN 
-        v_operation := 'UPDATE';
-    ELSIF DELETING THEN 
-        v_operation := 'DELETE';
-    END IF;
-    
-    -- Check if operation is allowed
-    v_check_result := check_operation_allowed(v_operation, 'USERS');
-    
-    -- If not allowed, log and raise error
-    IF v_check_result != 'ALLOWED' THEN
-        v_audit_id := log_audit_event('USERS', v_operation, 'DENIED', v_check_result);
-        RAISE_APPLICATION_ERROR(-20002, v_check_result);
-    ELSE
-        -- Log allowed operation
-        v_audit_id := log_audit_event('USERS', v_operation, 'ALLOWED', NULL);
-    END IF;
-END;
-/
-
-
-### Trigger on SCANS Table
-
 **Purpose:** Enforce operation restrictions on SCANS table
+**Purpose:** Demonstrate advanced trigger with multiple timing points
 
-```sql
-CREATE OR REPLACE TRIGGER trg_scans_restrict
-BEFORE INSERT OR UPDATE OR DELETE ON scans
-FOR EACH ROW
-DECLARE
-    v_check_result VARCHAR2(500);
-    v_operation VARCHAR2(10);
-    v_audit_id NUMBER;
-BEGIN
-    IF INSERTING THEN v_operation := 'INSERT';
-    ELSIF UPDATING THEN v_operation := 'UPDATE';
-    ELSIF DELETING THEN v_operation := 'DELETE';
-    END IF;
-    
-    v_check_result := check_operation_allowed(v_operation, 'SCANS');
-    
-    IF v_check_result != 'ALLOWED' THEN
-        v_audit_id := log_audit_event('SCANS', v_operation, 'DENIED', v_check_result);
-        RAISE_APPLICATION_ERROR(-20002, v_check_result);
-    ELSE
-        v_audit_id := log_audit_event('SCANS', v_operation, 'ALLOWED', NULL);
-    END IF;
-END;
-/
+(screenshots/03_trigger_test_denied.png)<img width="1131" height="686" alt="phase VII scr6" src="https://github.com/user-attachments/assets/7a1b869d-f611-4b62-9661-bed11c72502c" />
 
-
-**Screenshot Evidence:**
-
-![Trigger Test - Denied on Weekday](screenshots/03_trigger_test_denied.png)
 
 **Test Result:**
 -  INSERT attempt on USERS table on Monday
@@ -1152,45 +941,12 @@ END;
 -  Audit log captured the denied attempt
 -  Transaction rolled back automatically
 
-
-
-## Compound Trigger
-
-### Compound Trigger on DISEASE_PROFILES
-
-**Purpose:** Demonstrate advanced trigger with multiple timing points
-
-```sql
-CREATE OR REPLACE TRIGGER trg_disease_compound
-FOR INSERT OR UPDATE OR DELETE ON disease_profiles
-COMPOUND TRIGGER
-    
-    -- BEFORE STATEMENT section
-    BEFORE STATEMENT IS
-    BEGIN
-        DBMS_OUTPUT.PUT_LINE('=== BEFORE STATEMENT: Operation starting ===');
-    END BEFORE STATEMENT;
-    
-    -- AFTER STATEMENT section
-    AFTER STATEMENT IS
-    BEGIN
-        DBMS_OUTPUT.PUT_LINE('=== AFTER STATEMENT: Operation completed ===');
-    END AFTER STATEMENT;
-    
-END trg_disease_compound;
-/
-```
-
 **Compound Trigger Features:**
 -  **BEFORE STATEMENT** - Executes once before the entire operation
 -  **AFTER STATEMENT** - Executes once after the entire operation
 -  **Shared State** - Can maintain variables across timing points
 -  **Performance** - More efficient than multiple separate triggers
 -  **Logging** - Provides operation start/end timestamps
-
-**Screenshot Evidence:**
-
-![Compound Trigger on Disease Profiles](screenshots/04_triggers_compound.png)
 
 **Structure:**
 ```
@@ -1206,15 +962,13 @@ COMPOUND TRIGGER trg_disease_compound
 │
 └── AFTER STATEMENT
     └── Log operation completion
-```
+`
 
----
 
-## All Triggers Summary
+## All Triggers
 
-**Screenshot Evidence:**
+(screenshots/05_triggers_list.png)<img width="860" height="475" alt="phase VII scr7" src="https://github.com/user-attachments/assets/bd35fc86-e3d6-4ff1-af25-810030e7982c" />
 
-![Complete Triggers List](screenshots/05_triggers_list.png)
 
 ### Implemented Triggers
 
@@ -1235,78 +989,29 @@ COMPOUND TRIGGER trg_disease_compound
 
 ## Testing Requirements & Results
 
-### Test Case 1: INSERT on Weekday (DENIED) 
-
-**Test Script:**
-```sql
-SET SERVEROUTPUT ON;
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('Testing INSERT on USERS...');
-    INSERT INTO users (user_id, name, email, password, role)
-    VALUES (user_seq.NEXTVAL, 'Test Monday', 'monday@test.com', 'pass', 'farmer');
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('SUCCESS: Allowed');
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('DENIED: ' || SQLERRM);
-        ROLLBACK;
-END;
-/
-```
+###  INSERT on Weekday (DENIED)  and **Audit Log Query:**
+(screenshots/03_trigger_test_denied.png)<img width="867" height="605" alt="phase VII scr5" src="https://github.com/user-attachments/assets/01d2b1a7-5eb1-4f84-bc0f-48fe7f90d9c5" />
 
 **Expected Result:**
 - Operation blocked on Monday-Friday
 - Error: ORA-20002
 - Message: "DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)"
 
-**Actual Result:**
-
-![Test Denied on Weekday](screenshots/03_trigger_test_denied.png)
-
-**Status:** ✅PASSED
+**Status:** PASSED
 -  INSERT blocked on Monday
 -  Error ORA-20002 raised
 -  Clear error message displayed
 -  Audit log captured attempt
-
-**Audit Log Query:**
-```sql
-SELECT audit_id, table_name, operation_type, status, operation_day, error_message
-FROM audit_log
-ORDER BY audit_id DESC
-FETCH FIRST 5 ROWS ONLY;
-```
-
 **Result:**
 ```
 AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
 --------  ----------  --------------  -------  -------------  -------------
 1         USERS       INSERT          DENIED   MONDAY         DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)
-```
-
----
 
 ### Test Case 2: INSERT on Weekend (ALLOWED) 
 
 **Test Script:**
-```sql
--- Change system date to Saturday for testing
--- (In production, wait until Saturday/Sunday)
 
-SET SERVEROUTPUT ON;
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('Testing INSERT on USERS (Weekend)...');
-    INSERT INTO users (user_id, name, email, password, role)
-    VALUES (user_seq.NEXTVAL, 'Test Saturday', 'saturday@test.com', 'pass', 'farmer');
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('SUCCESS: Operation Allowed');
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('ERROR: ' || SQLERRM);
-        ROLLBACK;
-END;
-/
-```
 
 **Expected Result:**
 - Operation succeeds on Saturday/Sunday
@@ -1449,25 +1154,7 @@ GROUP BY user_name, ip_address, session_id;
 -  Session ID: Retrieved from context
 -  Handles NULL gracefully if context unavailable
 
----
 
-## Additional Test Scenarios
-
-### Test UPDATE Operation
-
-```sql
-BEGIN
-    UPDATE users 
-    SET name = 'Updated Name' 
-    WHERE user_id = 1;
-    COMMIT;
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('DENIED: ' || SQLERRM);
-        ROLLBACK;
-END;
-/
-```
 
 **Result on Weekday:**  DENIED
 **Result on Weekend:**  ALLOWED
@@ -1506,10 +1193,6 @@ END;
 | 6. User Info Recorded | Complete | Complete |  PASSED |
 | 7. UPDATE on Weekday | DENIED | DENIED |  PASSED |
 | 8. DELETE on Weekday | DENIED | DENIED | PASSED |
-
-**Overall Result:** 🎉 **8/8 TESTS PASSED (100%)**
-
----
 
 ## Architecture Diagram
 
