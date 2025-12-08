@@ -617,15 +617,7 @@ ORDER BY object_type, object_name;
 | Test 5 | Cursor |  PASSED |
 | Test 6 | Views (2 views) |  PASSED |
 
----
 
-## Final Status
-
-```
-===== ALL TESTS COMPLETE =====
-===== ALL TESTS COMPLETE =====
-===== Phase V + VI Successfully Implemented =====^S
-```
 
 **All 25 database objects are VALID and functional:**
 -  5 Functions
@@ -635,7 +627,8 @@ ORDER BY object_type, object_name;
 -  5 Tables
 -  2 Views
 
-![Final Status](screenshots/phase6_final_status.png)
+![Final Status](screenshots/phase6_final_status.png)<img width="1297" height="588" alt="phase VI scre5" src="https://github.com/user-attachments/assets/7ead418c-991c-4c09-9b6e-c0ce136f2c6e" />
+
 
 
 
