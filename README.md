@@ -426,6 +426,221 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Total Records Inserted:** 30
 (https://user-images.githubusercontent.com/12345/image.png)<img width="1292" height="691" alt="phase V scr18" src="https://github.com/user-attachments/assets/bd1e5c3b-086a-453e-a53f-393582c01497" />
 
+# PHASE VI: Database Interaction & Transactions
+## Smart Crop Disease Detection & Management System
+
+**Student:** Docile (27549)  
+**Database:** wed_27549_docile_smartcropdiseasedetectionandmanagementsystem_db
+
+
+
+## Testing Results
+
+### Test 1: Register User and Record Scan
+
+**Test Script:**
+
+![Test 1: Register User](screenshots/phase6_test1_register_user.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/c566482a-f21e-4e82-a9d7-568f584fc1d9" />
+
+
+**Result:**
+-  **Test 1: Register User**
+- Result: User registered successfully with ID: 6
+- PL/SQL procedure successfully completed.
+
+**Result:**
+-  **Test 2: Record Scan**
+- Result: Scan recorded successfully with ID: 9
+- PL/SQL procedure successfully completed.
+
+
+### Test 3: Functions
+
+**Test Script:**
+```sql
+--  Functions
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('=== TEST 3: Functions ===');
+    DBMS_OUTPUT.PUT_LINE('Avg Confidence User 1: ' || fn_avg_confidence(1));
+    DBMS_OUTPUT.PUT_LINE('Total Scans User 1: ' || fn_total_scans(1));
+    DBMS_OUTPUT.PUT_LINE('Email Valid: ' || fn_validate_email('test@email.com'));
+    DBMS_OUTPUT.PUT_LINE('Disease Name: ' || fn_disease_name(1));
+    DBMS_OUTPUT.PUT_LINE(' ');
+END;
+/
+
+
+**Results:**
+- **Test 3: Functions**
+- Avg Confidence User 1: 90.15
+- Total Scans User 1: 4
+- Email Valid: VALID
+- Disease Name: Tomato Late Blight
+- PL/SQL procedure successfully completed.
+
+![Test 3: Functions](screenshots/phase6_test3_functions.png)
+
+
+
+###  Package
+
+**Test Script:**
+```sql
+-- Test 4: Package
+DECLARE
+    v_user_id NUMBER;
+    v_message VARCHAR2(500);
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('=== TEST 4: Package ===');
+    pkg_user_mgmt.register('Package Test', 'pkg@test.com', 'pass', v_user_id, v_message);
+    DBMS_OUTPUT.PUT_LINE(v_message);
+    DBMS_OUTPUT.PUT_LINE(' ');
+END;
+/
+
+
+**Result:**
+- ✅ **Test 4: Package**
+- User registered successfully with ID: 7
+- PL/SQL procedure successfully completed.
+
+![Test 4: Package](screenshots/phase6_test4_package.png)
+
+
+
+###  Cursor
+
+**Test Script:**
+```sql
+-- Test 5: Cursor
+BEGIN
+    sp_display_user_scans(1);
+END;
+/
+
+
+**Results:**
+- ✅ **Test 5: Cursor - Scan History for User 1**
+- Scan ID: 9 | Disease: Tomato Late Blight | Confidence: 91.5%
+- Scan ID: 8 | Disease: Tomato Late Blight | Confidence: 89.3%
+- Scan ID: 2 | Disease: Tomato Late Blight | Confidence: 92.3%
+- Scan ID: 1 | Disease: Tomato Late Blight | Confidence: 87.5%
+- PL/SQL procedure successfully completed.
+
+![Test 5: Cursor](screenshots/phase6_test5_cursor.png)
+
+
+
+###  Views
+
+**View 1: User Rankings**
+```sql
+SELECT * FROM vw_user_rankings WHERE ROWNUM <= 5;
+
+
+**Results:**
+
+| USER_ID | NAME | TOTAL_SCANS | RANK |
+|---------|------|-------------|------|
+| 1 | John Farmer | 4 | 1 |
+| 2 | Mary Smith | 2 | 2 |
+| 4 | Peter Green | 2 | 2 |
+| 5 | Sarah Brown | 1 | 4 |
+| 6 | Test User | 0 | 5 |
+
+**View 2: Monthly Statistics**
+```sql
+SELECT * FROM vw_monthly_stats;
+
+
+**Results:**
+
+| MONTH | TOTAL_SCANS | AVG_CONFIDENCE |
+|-------|-------------|----------------|
+| 2025-11 | 4 | 85.975 |
+| 2025-12 | 5 | 91.22 |
+
+![Test 6: Views](screenshots/phase6_test6_views.png)
+
+
+
+##  Verification of All Objects
+
+**Query:**
+```sql
+SELECT object_name, object_type, status
+FROM user_objects
+WHERE object_type IN ('TABLE','PROCEDURE','FUNCTION','PACKAGE','VIEW','SEQUENCE')
+ORDER BY object_type, object_name;
+```
+
+**All Objects Status:**
+
+| OBJECT_NAME | OBJECT_TYPE | STATUS |
+|-------------|-------------|--------|
+| FN_AVG_CONFIDENCE | FUNCTION | VALID |
+| FN_DETECTION_RATE | FUNCTION | VALID |
+| FN_DISEASE_NAME | FUNCTION | VALID |
+| FN_TOTAL_SCANS | FUNCTION | VALID |
+| FN_VALIDATE_EMAIL | FUNCTION | VALID |
+| PKG_DISEASE_MGMT | PACKAGE | VALID |
+| PKG_USER_MGMT | PACKAGE | VALID |
+| SP_ADD_RECOMMENDATION | PROCEDURE | VALID |
+| SP_DELETE_OLD_SCANS | PROCEDURE | VALID |
+| SP_DISPLAY_USER_SCANS | PROCEDURE | VALID |
+| SP_RECORD_SCAN | PROCEDURE | VALID |
+| SP_REGISTER_USER | PROCEDURE | VALID |
+| SP_UPDATE_DISEASE | PROCEDURE | VALID |
+| CROP_SEQ | SEQUENCE | VALID |
+| DISEASE_SEQ | SEQUENCE | VALID |
+| REC_SEQ | SEQUENCE | VALID |
+| SCAN_SEQ | SEQUENCE | VALID |
+| USER_SEQ | SEQUENCE | VALID |
+| CROP_TYPES | TABLE | VALID |
+| DISEASE_PROFILES | TABLE | VALID |
+| RECOMMENDATIONS | TABLE | VALID |
+| SCANS | TABLE | VALID |
+| USERS | TABLE | VALID |
+| VW_MONTHLY_STATS | VIEW | VALID |
+| VW_USER_RANKINGS | VIEW | VALID |
+
+**Total Objects:** 25 rows selected
+
+![Verification of All Objects](screenshots/phase6_verification_all_objects.png)
+
+---
+
+##  Test Summary
+
+| Test Case | Description | Status |
+|-----------|-------------|--------|
+| Test 1 | Register User |  PASSED |
+| Test 2 | Record Scan |  PASSED |
+| Test 3 | Functions (4 functions) |  PASSED |
+| Test 4 | Package |  PASSED |
+| Test 5 | Cursor |  PASSED |
+| Test 6 | Views (2 views) |  PASSED |
+
+---
+
+## Final Status
+
+```
+===== ALL TESTS COMPLETE =====
+===== ALL TESTS COMPLETE =====
+===== Phase V + VI Successfully Implemented =====^S
+```
+
+**All 25 database objects are VALID and functional:**
+-  5 Functions
+-  2 Packages
+-  6 Procedures
+-  5 Sequences
+-  5 Tables
+-  2 Views
+
+![Final Status](screenshots/phase6_final_status.png)
+
 
 
 
