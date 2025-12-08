@@ -602,9 +602,9 @@ ORDER BY object_type, object_name;
 
 **Total Objects:** 25 rows selected
 
-![Verification of All Objects](screenshots/phase6_verification_all_objects.png)
+![Verification of All Objects](screenshots/phase6_verification_all_objects.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/61ca699d-d785-4f74-a7b4-88ee8a050892" />
 
----
+
 
 ##  Test Summary
 
@@ -627,7 +627,7 @@ ORDER BY object_type, object_name;
 -  5 Tables
 -  2 Views
 
-![Final Status](screenshots/phase6_final_status.png)<img width="1297" height="588" alt="phase VI scre5" src="https://github.com/user-attachments/assets/7ead418c-991c-4c09-9b6e-c0ce136f2c6e" />
+(screenshots/phase6_final_status.png)<img width="1297" height="588" alt="phase VI scre5" src="https://github.com/user-attachments/assets/7ead418c-991c-4c09-9b6e-c0ce136f2c6e" />
 
 
 
@@ -1062,9 +1062,7 @@ END;
 │  │ Genocide Day     │  │   │  │ User context captured  │ │
 │  └──────────────────┘  │   │  └────────────────────────┘ │
 └────────────────────────┘   └──────────────────────────────┘
-```
 
----
 
 ## Key Implementation Highlights
 
@@ -1174,11 +1172,6 @@ DELETE FROM audit_log
 WHERE operation_date < ADD_MONTHS(SYSDATE, -12);
 ```
 
-### Add New Holidays
-```sql
-INSERT INTO public_holidays (holiday_date, holiday_name)
-VALUES (TO_DATE('2026-07-04', 'YYYY-MM-DD'), 'Liberation Day');
-```
 
 
 
