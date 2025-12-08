@@ -434,7 +434,9 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 ### Test 1: Register User and Record Scan
 
 **Test Script:**
-(screenshots/phase6_test1_register_user.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/fdf06fc4-c8aa-4516-903f-3037930da16b" />
+(./screenshots/phaseVI_scre1.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/6d10a380-b24c-47ec-bb3d-320b8bd24fba" />
+
+
 
 
 
