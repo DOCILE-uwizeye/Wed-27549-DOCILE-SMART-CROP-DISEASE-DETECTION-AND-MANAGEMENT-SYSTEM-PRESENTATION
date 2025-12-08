@@ -403,7 +403,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Total Records Inserted:** 10
 ```sql
 -- Farmers
-(https://user-images.githubusercontent.com/12345/image.png)<img width="1198" height="680" alt="phase V scr11" src="https://github.com/user-attachments/assets/5d030edb-62f6-4ec8-80fb-e95d336bab3c" />
+(./screenshots/Screenshot1.png)<img width="1198" height="680" alt="phase V scr11" src="https://github.com/user-attachments/assets/5695684a-1be8-4a45-9012-ed312508c675" />
+
 
 
 
