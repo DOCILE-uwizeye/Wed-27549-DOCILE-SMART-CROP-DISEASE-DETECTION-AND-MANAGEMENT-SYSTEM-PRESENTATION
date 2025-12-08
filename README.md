@@ -436,11 +436,6 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Test Script:**
 (https://user-images.githubusercontent.com/12345/image.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/73580332-1123-4f75-b3d5-2a258e05d1bb" />
 
-
-
-
-
-
 **Result:**
 -  **Test 1: Register User**
 - Result: User registered successfully with ID: 6
@@ -453,23 +448,10 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 
 ### Test 3: Functions
-
+###  Package
 **Test Script:**
-```sql
---  Functions
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('=== TEST 3: Functions ===');
-    DBMS_OUTPUT.PUT_LINE('Avg Confidence User 1: ' || fn_avg_confidence(1));
-    DBMS_OUTPUT.PUT_LINE('Total Scans User 1: ' || fn_total_scans(1));
-    DBMS_OUTPUT.PUT_LINE('Email Valid: ' || fn_validate_email('test@email.com'));
-    DBMS_OUTPUT.PUT_LINE('Disease Name: ' || fn_disease_name(1));
-    DBMS_OUTPUT.PUT_LINE(' ');
-END;
-/
-
-
 **Results:**
-- **Test 3: Functions**
+- **Test 3: Functions and Package**
 - Avg Confidence User 1: 90.15
 - Total Scans User 1: 4
 - Email Valid: VALID
@@ -477,46 +459,20 @@ END;
 - PL/SQL procedure successfully completed.
 
 ![Test 3: Functions](screenshots/phase6_test3_functions.png)
-
-
-
-###  Package
-
-**Test Script:**
-```sql
--- Test 4: Package
-DECLARE
-    v_user_id NUMBER;
-    v_message VARCHAR2(500);
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('=== TEST 4: Package ===');
-    pkg_user_mgmt.register('Package Test', 'pkg@test.com', 'pass', v_user_id, v_message);
-    DBMS_OUTPUT.PUT_LINE(v_message);
-    DBMS_OUTPUT.PUT_LINE(' ');
-END;
-/
-
-
 **Result:**
 -  Package**
 - User registered successfully with ID: 7
 - PL/SQL procedure successfully completed.
 
-![Test 4: Package](screenshots/phase6_test4_package.png)
+![Test 4: Package](screenshots/phase6_test4_package.png)<img width="776" height="642" alt="phase VI scre3" src="https://github.com/user-attachments/assets/6fdc4dd5-92a0-41ca-9cf0-274ce18ff1bb" />
+
 
 
 
 ###  Cursor
+### Views
 
-**Test Script:**
-```sql
--- Test 5: Cursor
-BEGIN
-    sp_display_user_scans(1);
-END;
-/
-
-
+-- Test 5: Cursor and Views
 **Results:**
 - **Test 5: Cursor - Scan History for User 1**
 - Scan ID: 9 | Disease: Tomato Late Blight | Confidence: 91.5%
@@ -525,14 +481,7 @@ END;
 - Scan ID: 1 | Disease: Tomato Late Blight | Confidence: 87.5%
 - PL/SQL procedure successfully completed.
 
-(screenshots/phase6_test5_cursor.png)
-
-###  Views
-
-**View 1: User Rankings**
-```sql
-SELECT * FROM vw_user_rankings WHERE ROWNUM <= 5;
-
+(screenshots/phase6_test5_cursor.png
 
 **Results:**
 
@@ -545,10 +494,6 @@ SELECT * FROM vw_user_rankings WHERE ROWNUM <= 5;
 | 6 | Test User | 0 | 5 |
 
 **View 2: Monthly Statistics**
-```sql
-SELECT * FROM vw_monthly_stats;
-
-
 **Results:**
 
 | MONTH | TOTAL_SCANS | AVG_CONFIDENCE |
@@ -556,7 +501,8 @@ SELECT * FROM vw_monthly_stats;
 | 2025-11 | 4 | 85.975 |
 | 2025-12 | 5 | 91.22 |
 
-![Test 6: Views](screenshots/phase6_test6_views.png)
+![Test 6: Views](screenshots/phase6_test6_views.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/20b999dd-c9b0-4bd9-9cd6-97394a828055" />
+
 
 
 
