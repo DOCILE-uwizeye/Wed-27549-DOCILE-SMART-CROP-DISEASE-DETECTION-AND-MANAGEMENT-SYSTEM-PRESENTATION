@@ -19,7 +19,7 @@ The process models how a farmer uploads a crop image, how the system analyzes it
 - Increased agricultural productivity.
 - Structured data for analytics.
 
----
+
 
 ## 2. Key Entities & Actors
 ### **Users**
