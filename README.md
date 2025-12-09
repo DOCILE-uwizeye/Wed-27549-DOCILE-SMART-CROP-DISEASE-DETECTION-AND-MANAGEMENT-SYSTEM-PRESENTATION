@@ -868,51 +868,486 @@ ORDER BY holiday_date;
 | 7. UPDATE on Weekday | DENIED | DENIED |  PASSED |
 | 8. DELETE on Weekday | DENIED | DENIED | PASSED |
 
-## Architecture Diagram
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architecture Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-┌─────────────────────────────────────────────────────────────┐
-│                    USER APPLICATION                          │
-└────────────────────┬────────────────────────────────────────┘
-                     │
-                     │ DML Operation (INSERT/UPDATE/DELETE)
-                     ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 TRIGGER (trg_users_restrict)                 │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │ 1. Determine operation type (INSERT/UPDATE/DELETE)   │  │
-│  │ 2. Call check_operation_allowed()                    │  │
-│  │ 3. If DENIED:                                         │  │
-│  │    - Log to audit_log (autonomous)                   │  │
-│  │    - RAISE_APPLICATION_ERROR                         │  │
-│  │ 4. If ALLOWED:                                        │  │
-│  │    - Log to audit_log (autonomous)                   │  │
-│  │    - Allow operation to proceed                      │  │
-│  └──────────────────────────────────────────────────────┘  │
-└────────────┬────────────────────────────┬───────────────────┘
-             │                            │
-             │ check_operation_allowed()  │ log_audit_event()
-             ▼                            ▼
-┌────────────────────────┐   ┌──────────────────────────────┐
-│  RESTRICTION FUNCTION  │   │   AUDIT LOGGING FUNCTION     │
-│  ┌──────────────────┐  │   │  ┌────────────────────────┐ │
-│  │ Check day of week │  │   │  │ PRAGMA AUTONOMOUS      │ │
-│  │ Check holidays    │  │   │  │ Get IP/Session         │ │
-│  │ Return ALLOWED or │  │   │  │ INSERT audit_log       │ │
-│  │ DENIED with msg   │  │   │  │ COMMIT independently   │ │
-│  └──────────────────┘  │   │  └────────────────────────┘ │
-└────────────────────────┘   └──────────────────────────────┘
-             │                            │
-             │ Query                      │ Insert
-             ▼                            ▼
-┌────────────────────────┐   ┌──────────────────────────────┐
-│   PUBLIC_HOLIDAYS      │   │       AUDIT_LOG              │
-│  ┌──────────────────┐  │   │  ┌────────────────────────┐ │
-│  │ Christmas Day    │  │   │  │ All operations logged  │ │
-│  │ New Year         │  │   │  │ Status: ALLOWED/DENIED │ │
-│  │ Genocide Day     │  │   │  │ User context captured  │ │
-│  └──────────────────┘  │   │  └────────────────────────┘ │
-└────────────────────────┘   └──────────────────────────────┘
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
 
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
 
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
 
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+        }
 
+        .layer {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+        }
+
+        .box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .trigger-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.3);
+        }
+
+        .trigger-box h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .trigger-steps {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .trigger-steps ul {
+            list-style: none;
+            text-align: left;
+            color: white;
+        }
+
+        .trigger-steps li {
+            padding: 10px 0;
+            font-size: 1em;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .trigger-steps li:last-child {
+            border-bottom: none;
+        }
+
+        .trigger-steps li::before {
+            content: "▶ ";
+            color: #ffd700;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .arrow {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 30px solid #667eea;
+            margin: 0 auto;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .function-layer {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .function-box {
+            flex: 1;
+            min-width: 350px;
+            max-width: 420px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .function-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(79, 172, 254, 0.4);
+        }
+
+        .function-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .function-content {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .function-content ul {
+            list-style: none;
+            color: white;
+        }
+
+        .function-content li {
+            padding: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .function-content li::before {
+            content: "✓ ";
+            color: #ffd700;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .database-layer {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .db-box {
+            flex: 1;
+            min-width: 350px;
+            max-width: 420px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(67, 233, 123, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .db-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(67, 233, 123, 0.4);
+        }
+
+        .db-box h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .db-content {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .db-content ul {
+            list-style: none;
+            color: white;
+        }
+
+        .db-content li {
+            padding: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .db-content li::before {
+            content: "📊 ";
+            margin-right: 8px;
+        }
+
+        .connection-label {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin: 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .split-arrows {
+            display: flex;
+            justify-content: space-around;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .split-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .function-box, .db-box {
+                min-width: 100%;
+            }
+        }
+
+        .legend {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .legend h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .legend-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .legend-color.purple {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .legend-color.pink {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .legend-color.blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .legend-color.green {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .legend-text {
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ System Architecture Diagram</h1>
+        <p style="text-align: center; color: #718096; margin-bottom: 40px; font-size: 1.1em;">
+            Smart Crop Disease Detection and Management System - Security & Audit Flow
+        </p>
+
+        <div class="architecture">
+            <!-- Layer 1: User Application -->
+            <div class="layer">
+                <div class="box">
+                    👤 USER APPLICATION
+                </div>
+            </div>
+
+            <div class="arrow">
+                <div class="connection-label">DML Operation (INSERT/UPDATE/DELETE)</div>
+                <div class="arrow-down"></div>
+            </div>
+
+            <!-- Layer 2: Trigger -->
+            <div class="layer">
+                <div class="trigger-box">
+                    <h3>🔒 TRIGGER: trg_users_restrict</h3>
+                    <div class="trigger-steps">
+                        <ul>
+                            <li>Determine operation type (INSERT/UPDATE/DELETE)</li>
+                            <li>Call check_operation_allowed()</li>
+                            <li>If DENIED:
+                                <ul style="margin-left: 20px; margin-top: 5px;">
+                                    <li style="border: none;">• Log to audit_log (autonomous)</li>
+                                    <li style="border: none;">• RAISE_APPLICATION_ERROR</li>
+                                </ul>
+                            </li>
+                            <li>If ALLOWED:
+                                <ul style="margin-left: 20px; margin-top: 5px;">
+                                    <li style="border: none;">• Log to audit_log (autonomous)</li>
+                                    <li style="border: none;">• Allow operation to proceed</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-arrows">
+                <div class="split-arrow">
+                    <div class="connection-label">check_operation_allowed()</div>
+                    <div class="arrow-down"></div>
+                </div>
+                <div class="split-arrow">
+                    <div class="connection-label">log_audit_event()</div>
+                    <div class="arrow-down"></div>
+                </div>
+            </div>
+
+            <!-- Layer 3: Functions -->
+            <div class="layer">
+                <div class="function-layer">
+                    <div class="function-box">
+                        <h3>⚙️ RESTRICTION FUNCTION</h3>
+                        <div class="function-content">
+                            <ul>
+                                <li>Check day of week</li>
+                                <li>Check holidays</li>
+                                <li>Return ALLOWED or DENIED with message</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="function-box">
+                        <h3>📝 AUDIT LOGGING FUNCTION</h3>
+                        <div class="function-content">
+                            <ul>
+                                <li>PRAGMA AUTONOMOUS_TRANSACTION</li>
+                                <li>Get IP Address & Session ID</li>
+                                <li>INSERT into audit_log</li>
+                                <li>COMMIT independently</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-arrows">
+                <div class="split-arrow">
+                    <div class="connection-label">Query Holiday Data</div>
+                    <div class="arrow-down"></div>
+                </div>
+                <div class="split-arrow">
+                    <div class="connection-label">Insert Audit Record</div>
+                    <div class="arrow-down"></div>
+                </div>
+            </div>
+
+            <!-- Layer 4: Database Tables -->
+            <div class="layer">
+                <div class="database-layer">
+                    <div class="db-box">
+                        <h3>📅 PUBLIC_HOLIDAYS</h3>
+                        <div class="db-content">
+                            <ul>
+                                <li>Christmas Day</li>
+                                <li>New Year Day</li>
+                                <li>Genocide Memorial Day</li>
+                                <li>Epiphany</li>
+                                <li>Boxing Day</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="db-box">
+                        <h3>📋 AUDIT_LOG</h3>
+                        <div class="db-content">
+                            <ul>
+                                <li>All operations logged</li>
+                                <li>Status: ALLOWED/DENIED</li>
+                                <li>User context captured</li>
+                                <li>IP & Session tracking</li>
+                                <li>Old/New values stored</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <h3>📌 Legend</h3>
+            <div class="legend-item">
+                <div class="legend-color purple"></div>
+                <div class="legend-text"><strong>User Layer:</strong> Application interface and user interactions</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color pink"></div>
+                <div class="legend-text"><strong>Trigger Layer:</strong> Business rule enforcement and operation control</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color blue"></div>
+                <div class="legend-text"><strong>Function Layer:</strong> Validation and logging logic</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color green"></div>
+                <div class="legend-text"><strong>Database Layer:</strong> Data storage and persistence</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #edf2f7; border-radius: 10px; text-align: center;">
+            <p style="color: #4a5568; font-size: 0.95em; margin-bottom: 10px;">
+                <strong>Security Features:</strong> Weekday/Holiday restrictions • Autonomous audit logging • IP tracking • Session monitoring • Complete operation history
+            </p>
+            <p style="color: #718096; font-size: 0.85em;">
+                Smart Crop Disease Detection System - Phase VII Implementation
+            </p>
+        </div>
+    </div>
+</body>
+</html>
