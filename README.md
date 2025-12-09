@@ -486,7 +486,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 - Disease Name: Tomato Late Blight
 - PL/SQL procedure successfully completed.
 
-![Test 3: Functions](phase%20VI%20scre4.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/c130771a-67ee-44f0-98f6-7982299decb6" />
+![Test 3: Functions](phase%20VI%20scre4.png)<img width="1306" height="695" alt="phase%20VI %20scre4" src="https://github.com/user-attachments/assets/c130771a-67ee-44f0-98f6-7982299decb6" />
 
 
 **Result:**
