@@ -461,10 +461,11 @@ All results and screenshots are included below.
 
 ---
 
-## ✅ **Test 1: Register User & Record Scan**
+##  **Test 1: Register User & Record Scan**
 
 ### **Screenshot**
-![Register User & Record Scan](./screenshots/phase_VI_scre1.png)
+![Register User & Record Scan](./screenshots/phase_VI_scre.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/ec184b95-056f-4246-9de6-7874be946f0f" />
+
 
 ### **Results**
 - User registration executed successfully  
