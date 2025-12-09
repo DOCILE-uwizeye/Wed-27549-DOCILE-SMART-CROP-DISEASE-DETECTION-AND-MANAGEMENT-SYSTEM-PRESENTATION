@@ -1,8 +1,34 @@
+** Smart Crop Disease Detection and Management System
+- **Name:** Docile - Uwizeye
+- **Student ID:** 27549
+- **Group:** Wednesday
+- **Institution:** Adventist University of Central Africa (AUCA)
+- **Course:** Database Development with PL/SQL (INSY 8311)
+- **Lecturer:** Eric Maniraguha
+
+## Problem Statement
+
+Farmers struggle to identify crop diseases early, leading to reduced yields and significant crop losses. Traditional diagnosis methods are slow, require expert knowledge, and are not always accessible to small-scale farmers. This Smart Crop Disease Detection and Management System provides instant disease detection through AI-powered image analysis, helping farmers take timely action to protect their crops and improve agricultural productivity.
+
+## Key Objectives
+
+1. **Enable Quick Disease Detection** - Provide instant crop disease identification through image upload and automated analysis
+
+2. **Comprehensive Disease Information** - Maintain a database of 54+ disease profiles with symptoms, causes, treatments, and prevention strategies
+
+3. **Treatment Recommendations** - Deliver personalized, actionable recommendations based on detected diseases to help farmers respond effectively
+
+4. **Historical Tracking** - Store and track scan history over time, enabling farmers to monitor crop health trends and patterns
+
+5. **Multi-Role Support** - Support different user types (farmers, agronomists, administrators) with appropriate access levels and functionality
+
+6. **Data-Driven Insights** - Provide analytics and business intelligence capabilities through views, reports, and statistical analysis
+
+7. **Security & Compliance** - Implement comprehensive auditing, operation restrictions, and security controls to protect data integrity
+
+8. **Scalability & Performance** - Design a robust Oracle PL/SQL database system with optimized queries, indexes, and efficient data structures
+
 # Phase II: Business Process Modeling
-## Project: Smart Crop Disease Detection & Management System
-
-
-
 ## 1. Scope Definition
 ### **Business Process Covered:**  
 The process models how a farmer uploads a crop image, how the system analyzes it, detects disease, stores the scan, and generates recommendations.
