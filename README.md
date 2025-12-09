@@ -420,6 +420,35 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 | scan_status | VARCHAR2(20) | CHECK | Status (pending/completed/failed) |
 | crop_id | NUMBER(10) | FK | References crop_types |
 
+## DATA INSERTION SCRIPTS
+
+### Sample Data: USERS Table
+**Total Records Inserted:** 10
+
+### Screenshot
+![USERS Table](./screenshots/phase V scr11.png)![Uploading phase V scr11.png…]()
+
+
+
+### Sample Data: DISEASE_PROFILES Table
+**Total Records Inserted:** 54
+
+### Screenshot
+![DISEASE_PROFILES Table](./screenshots/phase V 13 (2).png)
+
+
+### Sample Data: SCANS Table
+**Total Records Inserted:** 25+
+
+### Screenshot
+![SCANS Table](./screenshots/phase V scr17.png)
+
+
+### Sample Data: RECOMMENDATIONS Table
+**Total Records Inserted:** 30
+
+### Screenshot
+![RECOMMENDATIONS Table](./screenshots/phase V scr18.png)
 
 
 
