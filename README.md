@@ -869,45 +869,4 @@ ORDER BY holiday_date;
 | 8. DELETE on Weekday | DENIED | DENIED | PASSED |
 
 # Architecture Diagram
-                                                ┌──────────────────────────────────────┐
-                         │           USER APPLICATION           │
-                         └───────────────────────┬──────────────┘
-                                                 │
-                                                 │  DML Operation
-                                                 │ (INSERT/UPDATE/DELETE)
-                                                 ▼
-┌───────────────────────────────────────────────────────────────────────────┐
-│                            DATABASE TRIGGER                               │
-│                        (trg_users_restrict)                               │
-│---------------------------------------------------------------------------│
-│  1. Identify operation (INSERT/UPDATE/DELETE)                             │
-│  2. Call restriction function: check_operation_allowed()                  │
-│  3. IF result = DENIED:                                                   │
-│        - Log event via audit function (autonomous)                        │
-│        - RAISE_APPLICATION_ERROR                                           │
-│  4. IF result = ALLOWED:                                                  │
-│        - Log event via audit function (autonomous)                        │
-│        - Proceed with operation                                           │
-└───────────────┬───────────────────────────────────────────────┬───────────┘
-                │                                               │
-                │ check_operation_allowed()                     │ log_audit_event()
-                ▼                                               ▼
-        ┌──────────────────────────────┐              ┌──────────────────────────────┐
-        │     RESTRICTION FUNCTION     │              │     AUDIT LOG FUNCTION       │
-        │  check_operation_allowed()   │              │       log_audit_event()      │
-        ├──────────────────────────────┤              ├──────────────────────────────┤
-        │ - Check day of week          │              │ - PRAGMA AUTONOMOUS          │
-        │ - Check if holiday           │              │ - Capture IP + Session ID    │
-        │ - Return ALLOWED or DENIED   │              │ - Insert audit record        │
-        │   with message               │              │ - Commit independently       │
-        └──────────────────────────────┘              └──────────────────────────────┘
-                │                                               │
-                │ Query                                         │ Insert
-                ▼                                               ▼
-        ┌──────────────────────────────┐              ┌──────────────────────────────┐
-        │        PUBLIC_HOLIDAYS       │              │          AUDIT_LOG           │
-        ├──────────────────────────────┤              ├──────────────────────────────┤
-        │ - List of holidays           │              │ - All DML logged             │
-        │ - Used to restrict updates   │              │ - Status: ALLOWED/DENIED     │
-        │   on weekdays/holidays       │              │ - Stores old/new values      │
-        └──────────────────────────────┘              └──────────────────────────────┘
+        
