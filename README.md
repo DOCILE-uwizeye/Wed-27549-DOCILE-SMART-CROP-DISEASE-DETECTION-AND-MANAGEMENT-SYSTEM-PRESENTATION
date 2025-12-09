@@ -759,8 +759,6 @@ ORDER BY holiday_date;
 -  Holiday restrictions enforced
 -  All operations logged
 
----
-
 ## Testing Requirements & Results
 
 ###  INSERT on Weekday (DENIED)  and **Audit Log Query:**
@@ -776,18 +774,9 @@ ORDER BY holiday_date;
 -  Error ORA-20002 raised
 -  Clear error message displayed
 -  Audit log captured attempt
-**Result:**
-```
-AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
---------  ----------  --------------  -------  -------------  -------------
-1         USERS       INSERT          DENIED   MONDAY         DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)
-
+    
 ### Test Case : INSERT on Weekend (ALLOWED) 
-
-**Test Script:**
-
-
-**Expected Result:**
+** Result:**
 - Operation succeeds on Saturday/Sunday
 - No error raised
 - Message: "SUCCESS: Operation Allowed"
@@ -797,36 +786,8 @@ AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
 -  No error raised
 -  Audit log shows status='ALLOWED'
 
-**Audit Log:**
-```
-AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
---------  ----------  --------------  -------  -------------  -------------
-2         USERS       INSERT          ALLOWED  SATURDAY       NULL
-```
-
----
-
 ### Test Case : INSERT on Public Holiday (DENIED) 
-
-**Test Script:**
-```sql
--- Test on December 25, 2025 (Christmas Day)
-SET SERVEROUTPUT ON;
-BEGIN
-    DBMS_OUTPUT.PUT_LINE('Testing INSERT on PUBLIC HOLIDAY...');
-    INSERT INTO users (user_id, name, email, password, role)
-    VALUES (user_seq.NEXTVAL, 'Test Holiday', 'holiday@test.com', 'pass', 'farmer');
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('SUCCESS: Allowed');
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('DENIED: ' || SQLERRM);
-        ROLLBACK;
-END;
-/
-```
-
-**Expected Result:**
+**Result:**
 - Operation blocked on public holiday
 - Error: ORA-20002
 - Message: "DENIED: INSERT on USERS NOT ALLOWED on PUBLIC HOLIDAY (Christmas Day)"
@@ -836,35 +797,8 @@ END;
 -  Error raised with holiday name
 -  Audit log captured with holiday details
 
-**Audit Log:**
-```
-AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
---------  ----------  --------------  -------  -------------  -------------
-3         USERS       INSERT          DENIED   THURSDAY       DENIED: INSERT on USERS NOT ALLOWED on PUBLIC HOLIDAY (Christmas Day)
-```
-
----
-
 ### Test Case : Audit Log Captures All Attempts 
-
-**Verification Query:**
-```sql
-SELECT 
-    audit_id,
-    table_name,
-    operation_type,
-    user_name,
-    TO_CHAR(operation_date, 'DD-MON-YYYY HH24:MI:SS') as operation_time,
-    operation_day,
-    status,
-    error_message,
-    ip_address,
-    session_id
-FROM audit_log
-ORDER BY audit_id DESC;
-```
-
-**Expected Behavior:**
+**Behavior:**
 - All INSERT/UPDATE/DELETE attempts logged
 - Both ALLOWED and DENIED operations captured
 - User context (name, IP, session) recorded
@@ -878,7 +812,7 @@ ORDER BY audit_id DESC;
 -  Timestamps accurate
 -  Status correctly marked
 
----
+
 
 ### Test Case : Error Messages Are Clear 
 
@@ -900,24 +834,10 @@ ORDER BY audit_id DESC;
 -  Messages are descriptive
 -  Include operation type and table
 -  Specify exact reason (weekday/holiday)
--  Include day name or holiday name
-
----
+-  Include day name or holiday n
 
 ### Test Case : User Info Properly Recorded 
-
-**Verification Query:**
-```sql
-SELECT 
-    user_name,
-    ip_address,
-    session_id,
-    COUNT(*) as operation_count
-FROM audit_log
-GROUP BY user_name, ip_address, session_id;
-```
-
-**Expected Data:**
+** Data:**
 - User name from database session
 - IP address from SYS_CONTEXT
 - Session ID from SYS_CONTEXT
@@ -928,32 +848,12 @@ GROUP BY user_name, ip_address, session_id;
 -  Session ID: Retrieved from context
 -  Handles NULL gracefully if context unavailable
 
-
-
 **Result on Weekday:**  DENIED
 **Result on Weekend:**  ALLOWED
-
----
 
 ### Test DELETE Operation
-
-```sql
-BEGIN
-    DELETE FROM scans 
-    WHERE scan_id = 1;
-    COMMIT;
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('DENIED: ' || SQLERRM);
-        ROLLBACK;
-END;
-/
-```
-
 **Result on Weekday:**  DENIED
 **Result on Weekend:**  ALLOWED
-
----
 
 ## Testing Summary
 
@@ -970,7 +870,6 @@ END;
 
 ## Architecture Diagram
 
-```
 ┌─────────────────────────────────────────────────────────────┐
 │                    USER APPLICATION                          │
 └────────────────────┬────────────────────────────────────────┘
