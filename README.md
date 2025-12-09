@@ -463,6 +463,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Test Script:**
 (https://user-images.githubusercontent.com/12345/image.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/73580332-1123-4f75-b3d5-2a258e05d1bb" />
 
+
 **Result:**
 -  **Test 1: Register User**
 - Result: User registered successfully with ID: 6
@@ -485,7 +486,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 - Disease Name: Tomato Late Blight
 - PL/SQL procedure successfully completed.
 
-![Test 3: Functions](screenshots/phase6_test3_functions.png)<img width="776" height="642" alt="phase VI scre3" src="https://github.com/user-attachments/assets/8ab95083-4692-4a3e-b5bb-3ec637af8ce7" />
+![Test 3: Functions](phase%20VI%20scre4.png)
 
 **Result:**
 -  **Package**
