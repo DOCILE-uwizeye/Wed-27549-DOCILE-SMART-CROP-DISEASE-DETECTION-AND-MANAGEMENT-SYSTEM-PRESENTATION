@@ -712,22 +712,6 @@ ORDER BY holiday_date;
 -  **Performance** - More efficient than multiple separate triggers
 -  **Logging** - Provides operation start/end timestamps
 
-**Structure:**
-```
-COMPOUND TRIGGER trg_disease_compound
-├── BEFORE STATEMENT
-│   └── Log operation start
-│
-├── BEFORE EACH ROW (optional)
-│   └── Row-level validations
-│
-├── AFTER EACH ROW (optional)
-│   └── Row-level audit
-│
-└── AFTER STATEMENT
-    └── Log operation completion
-`
-
 
 ## All Triggers
 
@@ -772,7 +756,7 @@ AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
 --------  ----------  --------------  -------  -------------  -------------
 1         USERS       INSERT          DENIED   MONDAY         DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)
 
-### Test Case 2: INSERT on Weekend (ALLOWED) 
+### Test Case : INSERT on Weekend (ALLOWED) 
 
 **Test Script:**
 
@@ -796,7 +780,7 @@ AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
 
 ---
 
-### Test Case 3: INSERT on Public Holiday (DENIED) 
+### Test Case : INSERT on Public Holiday (DENIED) 
 
 **Test Script:**
 ```sql
@@ -835,7 +819,7 @@ AUDIT_ID  TABLE_NAME  OPERATION_TYPE  STATUS   OPERATION_DAY  ERROR_MESSAGE
 
 ---
 
-### Test Case 4: Audit Log Captures All Attempts 
+### Test Case : Audit Log Captures All Attempts 
 
 **Verification Query:**
 ```sql
@@ -870,7 +854,7 @@ ORDER BY audit_id DESC;
 
 ---
 
-### Test Case 5: Error Messages Are Clear 
+### Test Case : Error Messages Are Clear 
 
 **Review Error Messages:**
 
@@ -894,7 +878,7 @@ ORDER BY audit_id DESC;
 
 ---
 
-### Test Case 6: User Info Properly Recorded 
+### Test Case : User Info Properly Recorded 
 
 **Verification Query:**
 ```sql
@@ -1003,117 +987,6 @@ END;
 │  │ Genocide Day     │  │   │  │ User context captured  │ │
 │  └──────────────────┘  │   │  └────────────────────────┘ │
 └────────────────────────┘   └──────────────────────────────┘
-
-
-## Key Implementation Highlights
-
-### 1. Autonomous Transactions 
-```sql
-PRAGMA AUTONOMOUS_TRANSACTION;
-```
-- Audit logs persist even if main transaction fails
-- Independent commit/rollback
-- Ensures audit integrity
-
-### 2. System Context Capture 
-```sql
-SYS_CONTEXT('USERENV', 'IP_ADDRESS')
-SYS_CONTEXT('USERENV', 'SESSIONID')
-```
-- Retrieves client IP address
-- Captures database session ID
-- Enables security tracking
-
-### 3. CLOB for Data History 
-```sql
-old_values CLOB
-new_values CLOB
-```
-- Stores complete before/after state
-- Supports large data changes
-- Enables change tracking and rollback
-
-### 4. Check Constraints 
-```sql
-CHECK (operation_type IN ('INSERT', 'UPDATE', 'DELETE'))
-CHECK (status IN ('ALLOWED', 'DENIED'))
-```
-- Enforces data integrity
-- Prevents invalid values
-- Database-level validation
-
----
-
-## Security Benefits
-
-1. **Compliance** 
-   - Complete audit trail for regulatory requirements
-   - Immutable log (autonomous transactions)
-   - Timestamp and user tracking
-
-2. **Access Control** 
-   - Prevents unauthorized weekend work
-   - Respects public holidays
-   - Clear error messages for users
-
-3. **Forensics** 
-   - Track who attempted what operation
-   - When and from where (IP address)
-   - What data would have changed
-
-4. **Accountability** 
-   - User name captured automatically
-   - Session tracking
-   - Cannot be bypassed
-
----
-
-## Performance Considerations
-
-### Indexes Created 
-```sql
-CREATE INDEX idx_audit_date ON audit_log(operation_date);
-CREATE INDEX idx_audit_user ON audit_log(user_name);
-CREATE INDEX idx_audit_status ON audit_log(status);
-CREATE INDEX idx_audit_table ON audit_log(table_name);
-```
-
-**Benefits:**
-- Fast queries by date range
-- Quick user activity lookups
-- Efficient status filtering
-- Table-specific audits
-
-### Autonomous Transaction Impact
-- **Pros:** Audit integrity, independent commits
-- **Cons:** Slight performance overhead
-- **Mitigation:** Lightweight function, minimal data
-
----
-
-## Maintenance & Monitoring
-
-### Monitor Audit Log Growth
-```sql
-SELECT 
-    COUNT(*) as total_records,
-    ROUND(SUM(DBMS_LOB.GETLENGTH(old_values))/1024/1024, 2) as old_values_mb,
-    ROUND(SUM(DBMS_LOB.GETLENGTH(new_values))/1024/1024, 2) as new_values_mb
-FROM audit_log;
-```
-
-### Archive Old Audit Records
-```sql
--- Archive records older than 1 year
-CREATE TABLE audit_log_archive AS
-SELECT * FROM audit_log
-WHERE operation_date < ADD_MONTHS(SYSDATE, -12);
-
-DELETE FROM audit_log
-WHERE operation_date < ADD_MONTHS(SYSDATE, -12);
-```
-
-
 
 
 
