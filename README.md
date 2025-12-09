@@ -461,7 +461,8 @@ All results and screenshots are included below.
 ## ✅ **Test 3: Cursor, Views, User Rankings & Monthly Stats**
 
 ### **Screenshot**
-![Cursor and Views](./screenshots/phase_VI_scre4.png)
+![Cursor and Views](./screenshots/phase_VI_scre4.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/56a3426e-95a4-4d4b-914b-56b794464b03" />
+
 
 ### **Cursor Output**
 Cursor for displaying user scan history executed successfully:  
