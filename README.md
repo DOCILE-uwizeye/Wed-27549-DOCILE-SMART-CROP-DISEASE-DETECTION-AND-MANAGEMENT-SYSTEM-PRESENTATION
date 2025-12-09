@@ -422,36 +422,6 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 
 
-##  DATA INSERTION SCRIPTS
-
-### Sample Data: USERS Table
-
-**Total Records Inserted:** 10
-```sql
--- Farmers
-(./screenshots/Screenshot1.png)<img width="1198" height="680" alt="phase V scr11" src="https://github.com/user-attachments/assets/5695684a-1be8-4a45-9012-ed312508c675" />
-
-
-
-
-
-### Sample Data: DISEASE_PROFILES Table
-
-**Total Records Inserted:** 54
-(https://user-images.githubusercontent.com/12345/image.png)<img width="1336" height="696" alt="phase V 13 (2)" src="https://github.com/user-attachments/assets/bc2527a5-46a7-4013-ac35-862b8e5a274e" />
-
-
-
-### Sample Data: SCANS Table
-
-**Total Records Inserted:** 25+
-(https://user-images.githubusercontent.com/12345/image.png)<img width="1107" height="681" alt="phase V scr17" src="https://github.com/user-attachments/assets/e7f6464f-27a2-48eb-995e-517203d22d24" />
-
-
-### Sample Data: RECOMMENDATIONS Table
-
-**Total Records Inserted:** 30
-(https://user-images.githubusercontent.com/12345/image.png)<img width="1292" height="691" alt="phase V scr18" src="https://github.com/user-attachments/assets/bd1e5c3b-086a-453e-a53f-393582c01497" />
 
 # Phase VI: Database Interaction & Transactions
 
