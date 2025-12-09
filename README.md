@@ -453,153 +453,55 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Total Records Inserted:** 30
 (https://user-images.githubusercontent.com/12345/image.png)<img width="1292" height="691" alt="phase V scr18" src="https://github.com/user-attachments/assets/bd1e5c3b-086a-453e-a53f-393582c01497" />
 
-# Phase VI : Database Interaction & Transactions
+# Phase VI: Database Interaction & Transactions
 
+This phase validates all PL/SQL operations implemented in the Smart Crop Disease Detection & Management System.  
+The tests include procedures, functions, packages, cursors, and views.  
+All results and screenshots are included below.
 
-## Testing Results
+---
 
-### Test 1: Register User and Record Scan
+## ✅ **Test 1: Register User & Record Scan**
 
-**Test Script:**
-![Phase VI Test 1](./phase%20VI%20scre.png)
+### **Screenshot**
+![Register User & Record Scan](./screenshots/phase_VI_scre1.png)
 
+### **Results**
+- User registration executed successfully  
+- Scan recording completed successfully  
+- No errors encountered during procedure execution  
 
+---
 
-**Result:**
--  **Test 1: Register User**
-- Result: User registered successfully with ID: 6
-- PL/SQL procedure successfully completed.
+## ✅ **Test 2: Testing Functions & Package Execution**
 
-**Result:**
--  **Test 2: Record Scan**
-- Result: Scan recorded successfully with ID: 9
-- PL/SQL procedure successfully completed.
+### **Screenshot**
+![Functions & Package](./screenshots/phase_VI_scre2.png)
 
+### **Results**
+- All PL/SQL functions returned correct values  
+- Email validation, detection rate, and confidence calculations working  
+- Package operations (PKG_USER_MGMT / PKG_DISEASE_MGMT) executed successfully  
+- No errors returned  
 
-### Test 3: Functions
-###  Package
-**Test Script:**
-**Results:**
-- **Test 3: Functions and Package**
-- Avg Confidence User 1: 90.15
-- Total Scans User 1: 4
-- Email Valid: VALID
-- Disease Name: Tomato Late Blight
-- PL/SQL procedure successfully completed.
+---
 
-![Test 3: Functions](phase%20VI%20scre4.png)<img width="1306" height="695" alt="phase%20VI %20scre4" src="https://github.com/user-attachments/assets/c130771a-67ee-44f0-98f6-7982299decb6" />
+## ✅ **Test 3: Cursor, Views, User Rankings & Monthly Stats**
 
+### **Screenshot**
+![Cursor and Views](./screenshots/phase_VI_scre4.png)
 
-**Result:**
--  **Package**
-- User registered successfully with ID: 7
-- PL/SQL procedure successfully completed.
+### **Cursor Output**
+Cursor for displaying user scan history executed successfully:  
+- Returned all associated scans  
+- Displayed disease, confidence, and dates correctly  
 
-![Test 4: Package](screenshots/phase6_test4_package.png)<img width="776" height="642" alt="phase VI scre3" src="https://github.com/user-attachments/assets/6fdc4dd5-92a0-41ca-9cf0-274ce18ff1bb" />
+### **Views Tested**
 
-
-
-
-###  Cursor
-### Views
-
--- Test 5: Cursor and Views
-**Results:**
-- **Test 5: Cursor - Scan History for User 1**
-- Scan ID: 9 | Disease: Tomato Late Blight | Confidence: 91.5%
-- Scan ID: 8 | Disease: Tomato Late Blight | Confidence: 89.3%
-- Scan ID: 2 | Disease: Tomato Late Blight | Confidence: 92.3%
-- Scan ID: 1 | Disease: Tomato Late Blight | Confidence: 87.5%
-- PL/SQL procedure successfully completed.
-
-(screenshots/phase6_test5_cursor.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/3763c328-93f5-4b35-9c90-a7f305dcd025" />
-
-
-**Results:**
-
-| USER_ID | NAME | TOTAL_SCANS | RANK |
-|---------|------|-------------|------|
-| 1 | John Farmer | 4 | 1 |
-| 2 | Mary Smith | 2 | 2 |
-| 4 | Peter Green | 2 | 2 |
-| 5 | Sarah Brown | 1 | 4 |
-| 6 | Test User | 0 | 5 |
-
-**View 2: Monthly Statistics**
-**Results:**
-
-| MONTH | TOTAL_SCANS | AVG_CONFIDENCE |
-|-------|-------------|----------------|
-| 2025-11 | 4 | 85.975 |
-| 2025-12 | 5 | 91.22 |
-
-![Test 6: Views](screenshots/phase6_test6_views.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/20b999dd-c9b0-4bd9-9cd6-97394a828055" />
-
-
-
-
-##  Verification of All Objects
-
-**All Objects Status:**
-
-| OBJECT_NAME | OBJECT_TYPE | STATUS |
-|-------------|-------------|--------|
-| FN_AVG_CONFIDENCE | FUNCTION | VALID |
-| FN_DETECTION_RATE | FUNCTION | VALID |
-| FN_DISEASE_NAME | FUNCTION | VALID |
-| FN_TOTAL_SCANS | FUNCTION | VALID |
-| FN_VALIDATE_EMAIL | FUNCTION | VALID |
-| PKG_DISEASE_MGMT | PACKAGE | VALID |
-| PKG_USER_MGMT | PACKAGE | VALID |
-| SP_ADD_RECOMMENDATION | PROCEDURE | VALID |
-| SP_DELETE_OLD_SCANS | PROCEDURE | VALID |
-| SP_DISPLAY_USER_SCANS | PROCEDURE | VALID |
-| SP_RECORD_SCAN | PROCEDURE | VALID |
-| SP_REGISTER_USER | PROCEDURE | VALID |
-| SP_UPDATE_DISEASE | PROCEDURE | VALID |
-| CROP_SEQ | SEQUENCE | VALID |
-| DISEASE_SEQ | SEQUENCE | VALID |
-| REC_SEQ | SEQUENCE | VALID |
-| SCAN_SEQ | SEQUENCE | VALID |
-| USER_SEQ | SEQUENCE | VALID |
-| CROP_TYPES | TABLE | VALID |
-| DISEASE_PROFILES | TABLE | VALID |
-| RECOMMENDATIONS | TABLE | VALID |
-| SCANS | TABLE | VALID |
-| USERS | TABLE | VALID |
-| VW_MONTHLY_STATS | VIEW | VALID |
-| VW_USER_RANKINGS | VIEW | VALID |
-
-**Total Objects:** 25 rows selected
-
-![Verification of All Objects](screenshots/phase6_verification_all_objects.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/61ca699d-d785-4f74-a7b4-88ee8a050892" />
-
-
-
-##  Test Summary
-
-| Test Case | Description | Status |
-|-----------|-------------|--------|
-| Test 1 | Register User |  PASSED |
-| Test 2 | Record Scan |  PASSED |
-| Test 3 | Functions (4 functions) |  PASSED |
-| Test 4 | Package |  PASSED |
-| Test 5 | Cursor |  PASSED |
-| Test 6 | Views (2 views) |  PASSED |
-
-
-
-**All 25 database objects are VALID and functional:**
--  5 Functions
--  2 Packages
--  6 Procedures
--  5 Sequences
--  5 Tables
--  2 Views
-
-(screenshots/phase6_final_status.png)<img width="1297" height="588" alt="phase VI scre5" src="https://github.com/user-attachments/assets/7ead418c-991c-4c09-9b6e-c0ce136f2c6e" />
-
-
+#### **1. User Rankings View**
+Executed query:
+```sql
+SELECT * FROM vw_user_rankings WHERE ROWNUM < 5;
 
 
 
