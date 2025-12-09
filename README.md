@@ -616,7 +616,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 **Purpose:** Store public holidays to enforce operation restrictions
 
-(./images/phase%20VIIscr1.png)
+(./images/phase%20VIIscr1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/93ae02b0-7a20-4bfc-9521-f7c1dcb5b5fd" />
+
 
 
 
