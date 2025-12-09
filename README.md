@@ -357,7 +357,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 | growing_season | VARCHAR2(50) | NULL | Optimal growing season |
 | created_date | DATE | DEFAULT SYSDATE | Record creation date |
 
----
+
 
 ### Table 3: DISEASE_PROFILES
 
@@ -442,9 +442,9 @@ All results and screenshots are included below.
 - Scan recording completed successfully  
 - No errors encountered during procedure execution  
 
----
 
-## ✅ **Test 2: Testing Functions & Package Execution**
+
+##  **Test 2: Testing Functions & Package Execution**
 
 ### **Screenshot**
 ![Functions & Package](./screenshots/phase_VI_scre2.png)<img width="891" height="647" alt="phase VI scre2" src="https://github.com/user-attachments/assets/d1586ec0-38c8-4161-ae4c-c67ffce65469" />
@@ -458,7 +458,7 @@ All results and screenshots are included below.
 
 ---
 
-## ✅ **Test 3: Cursor, Views, User Rankings & Monthly Stats**
+##  **Test 3: Cursor, Views, User Rankings & Monthly Stats**
 
 ### **Screenshot**
 ![Cursor and Views](./screenshots/phase_VI_scre4.png)<img width="1306" height="695" alt="phase VI scre4" src="https://github.com/user-attachments/assets/56a3426e-95a4-4d4b-914b-56b794464b03" />
@@ -527,12 +527,7 @@ During:
 # 3. Audit Logging Function
 
 ## Screenshot
-![Phase VII Screenshot 3](images/phase_VII_scr3.png)
-
-# 4. Restriction Check Function
-
-## Screenshot
-![Phase VII Screenshot 4](images/phase_VII_scr4.png)
+![Phase VII Screenshot 3](images/phase_VII_scr3.png)<img width="735" height="688" alt="phase VII scr3" src="https://github.com/user-attachments/assets/7e86e92f-feec-4289-bd36-3c47d65fda19" />
 
 # 5. Triggers
 
