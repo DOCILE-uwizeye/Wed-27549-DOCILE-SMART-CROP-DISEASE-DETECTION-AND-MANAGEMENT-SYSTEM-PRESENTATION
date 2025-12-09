@@ -447,7 +447,8 @@ All results and screenshots are included below.
 ## ✅ **Test 2: Testing Functions & Package Execution**
 
 ### **Screenshot**
-![Functions & Package](./screenshots/phase_VI_scre2.png)
+![Functions & Package](./screenshots/phase_VI_scre2.png)<img width="891" height="647" alt="phase VI scre2" src="https://github.com/user-attachments/assets/d1586ec0-38c8-4161-ae4c-c67ffce65469" />
+
 
 ### **Results**
 - All PL/SQL functions returned correct values  
