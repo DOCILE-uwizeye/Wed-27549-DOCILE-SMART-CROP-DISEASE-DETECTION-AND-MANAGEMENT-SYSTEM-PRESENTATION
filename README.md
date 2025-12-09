@@ -505,7 +505,6 @@ During:
 - All dates fall within the upcoming month  
 - Unique constraint on `holiday_date` enforced
 
----
 
 # 2. Audit Log Table
 
@@ -513,7 +512,8 @@ During:
 **Purpose:** Maintain a complete audit trail for all database operations.
 
 ### Screenshot
-![Phase VII Screenshot 2](images/phase_VII_scr2.png)
+![Phase VII Screenshot 2](images/phase_VII_scr2.png)<img width="740" height="569" alt="phase VII scr2" src="https://github.com/user-attachments/assets/eec2c696-0e2e-49df-8c42-5cd5f3d3d69a" />
+
 
 ### Features
 - Auto-incrementing `audit_id`  
