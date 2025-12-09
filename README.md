@@ -412,7 +412,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 ### Sample Data: DISEASE_PROFILES Table
 
 **Total Records Inserted:** 54
-(https://user-images.githubusercontent.com/12345/image.png)<img width="1336" height="696" alt="phase V scr13" src="https://github.com/user-attachments/assets/f1033652-dc84-48cf-8406-9da726ce2f16" />
+(https://user-images.githubusercontent.com/12345/image.png)<img width="1336" height="696" alt="phase V 13 (2)" src="https://github.com/user-attachments/assets/bc2527a5-46a7-4013-ac35-862b8e5a274e" />
+
 
 
 ### Sample Data: SCANS Table
