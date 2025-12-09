@@ -869,7 +869,7 @@ ORDER BY holiday_date;
 | 8. DELETE on Weekday | DENIED | DENIED | PASSED |
 
 # Architecture Diagram
-                         ┌──────────────────────────────────────┐
+                                                ┌──────────────────────────────────────┐
                          │           USER APPLICATION           │
                          └───────────────────────┬──────────────┘
                                                  │
@@ -911,5 +911,3 @@ ORDER BY holiday_date;
         │ - Used to restrict updates   │              │ - Status: ALLOWED/DENIED     │
         │   on weekdays/holidays       │              │ - Stores old/new values      │
         └──────────────────────────────┘              └──────────────────────────────┘
-
-
