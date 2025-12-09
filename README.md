@@ -1,4 +1,5 @@
 #Smart Crop Disease Detection and Management System
+# Smart Crop Disease Detection and Management System
 - **Name:** Docile - Uwizeye
 - **Student ID:** 27549
 - **Group:** Wednesday
