@@ -470,263 +470,81 @@ Cursor for displaying user scan history executed successfully:
 - Displayed disease, confidence, and dates correctly  
 
 ### **Views Tested**
-
 #### **1. User Rankings View**
-Executed query:
-```sql
-SELECT * FROM vw_user_rankings WHERE ROWNUM < 5;
-
-
 
 # PHASE VII: Advanced Programming & Auditing
-**Objective:** Implement triggers, business rules, and comprehensive auditing.  
-This phase ensures secure operations, strict restriction checks, and full system auditing.
 
----
+## Objective
+Implement triggers, business rules, and a comprehensive auditing system to enforce secure database operations and prevent restricted actions.
 
-## 🔒 Critical Business Rule  
-Employees are **NOT allowed** to INSERT, UPDATE, or DELETE on:
+## Critical Business Rule
+Employees are **NOT allowed** to perform:
+
+- **INSERT**
+- **UPDATE**
+- **DELETE**
+
+During:
 
 - **WEEKDAYS (Monday–Friday)**
-- **PUBLIC HOLIDAYS** (Upcoming month only)
-
-These rules are enforced automatically using PL/SQL functions and triggers.
+- **PUBLIC HOLIDAYS (Upcoming Month Only)**
 
 ---
 
 # 1. Holiday Management
 
-##  Public Holidays Table + Insert Data  
+## Public Holidays Table + Insert Data
 **Purpose:** Store holiday dates used to block operations.
 
-### 📷 Screenshot  
-![Public Holidays](./images/phase%20VIIscr1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/d187bc0f-7455-4edc-bbca-b08cf8ae7bf0" />
+### Screenshot
+![Phase VII Screenshot 1](images/phase_VII_scr1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/049d3071-0ded-4f86-bd1d-ef8af4d56a0c" />
 
 
-###  Result
+### Result
 - 5 public holidays successfully inserted  
 - All dates fall within the upcoming month  
-- Unique constraint on `holiday_date` enforced  
+- Unique constraint on `holiday_date` enforced
 
 ---
 
 # 2. Audit Log Table
 
-##  Table Creation + Performance Indexes  
-**Purpose:** Maintain a complete audit trail for ALL database operations.
+## Table Creation + Indexes
+**Purpose:** Maintain a complete audit trail for all database operations.
 
-###  Screenshot  
-![Audit Table Creation](screenshots/01_audit_table_creation.png)
+### Screenshot
+![Phase VII Screenshot 2](images/phase_VII_scr2.png)
 
-###  Features Implemented
-- Auto-incrementing `audit_id`
-- Tracks:
-  - Table name  
-  - Operation type (INSERT/UPDATE/DELETE)  
-  - Username  
-  - Timestamp and day  
-  - Operation status (**ALLOWED / DENIED**)  
-  - Error message (if denied)  
+### Features
+- Auto-incrementing `audit_id`  
+- Tracks table name, operation type, username, timestamp, day, status, error message  
 - Records old and new values (CLOB)  
-- Stores IP address and session ID  
-- Check constraints for valid audit values  
-- Indexes created for performance:  
-  - `operation_date`  
-  - `table_name`  
-  - `username`
+- Stores IP and session ID  
+- Indexes for `operation_date`, `table_name`, `username`
 
 ---
 
 # 3. Audit Logging Function
 
-##  Function Implementation  
-**Purpose:** Log every operation using an autonomous transaction.
+## Screenshot
+![Phase VII Screenshot 3](images/phase_VII_scr3.png)
 
-###  Screenshot  
-![Audit Function](screenshots/02_audit_function.png)
+# 4. Restriction Check Function
 
-###  Key Features
-- Uses **PRAGMA AUTONOMOUS_TRANSACTION**
-- Logs persist even if the main transaction rolls back  
-- Captures IP address, session ID, and context values  
-- Handles exceptions gracefully  
-- Accepts optional parameters  
-- Returns generated `audit_id`  
-- Independently commits audit entries  
+## Screenshot
+![Phase VII Screenshot 4](images/phase_VII_scr4.png)
 
-###  Function Parameters
+# 5. Triggers
 
-| Parameter | Type | Required | Purpose |
-|-----------|------|----------|---------|
-| p_table_name | VARCHAR2 | Yes | Table being accessed |
-| p_operation | VARCHAR2 | Yes | INSERT/UPDATE/DELETE |
-| p_status | VARCHAR2 | Yes | ALLOWED or DENIED |
-| p_error_msg | VARCHAR2 | No | Error details if blocked |
-| p_old_values | CLOB | No | Data before change |
-| p_new_values | CLOB | No | Data after change |
+## Screenshot
+![Phase VII Screenshot 5](images/phase_VII_scr5.png)
 
----
+# 6. All Triggers
 
-# 4 Restriction Check Function
+## Screenshot
+![Phase VII Screenshot 6](images/phase_VII_scr6.png)
 
-##  Business Logic Flow
+# 7. Testing Results
 
-
-
-## S Simple Triggers
-
-### Trigger on USERS Table , Trigger on SCANS Table and Compound Trigger on DISEASE_PROFILES
-
-**Purpose:** Enforce operation restrictions on USERS table
-**Purpose:** Enforce operation restrictions on SCANS table
-**Purpose:** Demonstrate advanced trigger with multiple timing points
-
-(screenshots/03_trigger_test_denied.png)<img width="1131" height="686" alt="phase VII scr6" src="https://github.com/user-attachments/assets/7a1b869d-f611-4b62-9661-bed11c72502c" />
-
-
-**Test Result:**
--  INSERT attempt on USERS table on Monday
--  Trigger blocked operation with error ORA-20002
--  Error message: "DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)"
--  Audit log captured the denied attempt
--  Transaction rolled back automatically
-
-**Compound Trigger Features:**
--  **BEFORE STATEMENT** - Executes once before the entire operation
--  **AFTER STATEMENT** - Executes once after the entire operation
--  **Shared State** - Can maintain variables across timing points
--  **Performance** - More efficient than multiple separate triggers
--  **Logging** - Provides operation start/end timestamps
-
-
-## All Triggers
-
-(screenshots/05_triggers_list.png)<img width="860" height="475" alt="phase VII scr7" src="https://github.com/user-attachments/assets/bd35fc86-e3d6-4ff1-af25-810030e7982c" />
-
-
-### Implemented Triggers
-
-| Trigger Name | Table | Type | Purpose |
-|--------------|-------|------|---------|
-| **TRG_DISEASE_COMPOUND** | DISEASE_PROFILES | COMPOUND | Advanced logging with timing |
-| **TRG_SCANS_RESTRICT** | SCANS | BEFORE EACH ROW | Weekday/holiday restrictions |
-| **TRG_USERS_RESTRICT** | USERS | BEFORE EACH ROW | Weekday/holiday restrictions |
-
-**Coverage:**
--  All critical tables protected
--  INSERT, UPDATE, DELETE monitored
--  Weekday restrictions enforced
--  Holiday restrictions enforced
--  All operations logged
-
-## Testing Requirements & Results
-
-###  INSERT on Weekday (DENIED)  and **Audit Log Query:**
-(screenshots/03_trigger_test_denied.png)<img width="867" height="605" alt="phase VII scr5" src="https://github.com/user-attachments/assets/01d2b1a7-5eb1-4f84-bc0f-48fe7f90d9c5" />
-
-**Expected Result:**
-- Operation blocked on Monday-Friday
-- Error: ORA-20002
-- Message: "DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)"
-
-**Status:** PASSED
--  INSERT blocked on Monday
--  Error ORA-20002 raised
--  Clear error message displayed
--  Audit log captured attempt
-    
-### Test Case : INSERT on Weekend (ALLOWED) 
-** Result:**
-- Operation succeeds on Saturday/Sunday
-- No error raised
-- Message: "SUCCESS: Operation Allowed"
-
-**Status:** PASSED
--  INSERT successful on Saturday
--  No error raised
--  Audit log shows status='ALLOWED'
-
-### Test Case : INSERT on Public Holiday (DENIED) 
-**Result:**
-- Operation blocked on public holiday
-- Error: ORA-20002
-- Message: "DENIED: INSERT on USERS NOT ALLOWED on PUBLIC HOLIDAY (Christmas Day)"
-
-**Status:**  PASSED
--  INSERT blocked on holiday
--  Error raised with holiday name
--  Audit log captured with holiday details
-
-### Test Case : Audit Log Captures All Attempts 
-**Behavior:**
-- All INSERT/UPDATE/DELETE attempts logged
-- Both ALLOWED and DENIED operations captured
-- User context (name, IP, session) recorded
-- Timestamps accurate
-
-**Status:**  PASSED
--  All operations logged (3/3)
--  User name captured (DOCILE)
-- IP address recorded
--  Session ID captured
--  Timestamps accurate
--  Status correctly marked
-
-
-
-### Test Case : Error Messages Are Clear 
-
-**Review Error Messages:**
-
-| Test | Error Message | Clarity Score |
-|------|---------------|---------------|
-| Weekday | "DENIED: INSERT on USERS NOT ALLOWED on WEEKDAYS (MONDAY)" |  Excellent |
-| Holiday | "DENIED: INSERT on USERS NOT ALLOWED on PUBLIC HOLIDAY (Christmas Day)" | Excellent |
-| Weekend | No error (operation allowed) |  N/A |
-
-**Error Message Components:**
-1.  **Action** - "DENIED: INSERT"
-2.  **Target** - "on USERS"
-3.  **Reason** - "NOT ALLOWED on WEEKDAYS"
-4.  **Details** - "(MONDAY)" or "(Christmas Day)"
-
-**Status:**  PASSED
--  Messages are descriptive
--  Include operation type and table
--  Specify exact reason (weekday/holiday)
--  Include day name or holiday n
-
-### Test Case : User Info Properly Recorded 
-** Data:**
-- User name from database session
-- IP address from SYS_CONTEXT
-- Session ID from SYS_CONTEXT
-
-**Status:**  PASSED
-- User name: "DOCILE" (correct database user)
--  IP address: Retrieved from context
--  Session ID: Retrieved from context
--  Handles NULL gracefully if context unavailable
-
-**Result on Weekday:**  DENIED
-**Result on Weekend:**  ALLOWED
-
-### Test DELETE Operation
-**Result on Weekday:**  DENIED
-**Result on Weekend:**  ALLOWED
-
-## Testing Summary
-
-| Test Case | Expected | Actual | Status |
-|-----------|----------|--------|--------|
-| 1. INSERT on Weekday | DENIED | DENIED |  PASSED |
-| 2. INSERT on Weekend | ALLOWED | ALLOWED |  PASSED |
-| 3. INSERT on Holiday | DENIED | DENIED |  PASSED |
-| 4. Audit Log Captures | All logged | All logged |  PASSED |
-| 5. Error Messages | Clear | Clear |  PASSED |
-| 6. User Info Recorded | Complete | Complete |  PASSED |
-| 7. UPDATE on Weekday | DENIED | DENIED |  PASSED |
-| 8. DELETE on Weekday | DENIED | DENIED | PASSED |
-
-# Architecture Diagram
-        
+## Screenshot
+![Phase VII Screenshot 7](images/phase_VII_scr7.png)
