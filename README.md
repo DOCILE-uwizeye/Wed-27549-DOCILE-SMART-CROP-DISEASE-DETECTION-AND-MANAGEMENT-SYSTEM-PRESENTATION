@@ -448,7 +448,8 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Total Records Inserted:** 30
 
 ### Screenshot
-![RECOMMENDATIONS Table](./screenshots/phase V scr18.png)
+![RECOMMENDATIONS Table](./screenshots/phase V scr18.png)![Uploading phase V scr18.png…]()
+
 
 
 
