@@ -461,7 +461,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 ### Test 1: Register User and Record Scan
 
 **Test Script:**
-![Phase VI Test 1](./screenshots/phase6_test1.png)<img width="885" height="481" alt="phase VI  scre" src="https://github.com/user-attachments/assets/304e747d-003a-4e9c-a54d-1a27531d3efb" />
+![Phase VI Test 1](./phase%20VI%20scre.png)
 
 
 
@@ -615,15 +615,6 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 ### Public Holidays Table Creation and Insert holiday data
 
 **Purpose:** Store public holidays to enforce operation restrictions
-
-### Verification Query
-
-```sql
--- Verify holidays are loaded
-SELECT holiday_id, holiday_date, holiday_name 
-FROM public_holidays 
-ORDER BY holiday_date;
-
 
 (./images/Screenshot1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/a71a296b-8ea3-4029-97f5-6332ac5daa65" />
 
