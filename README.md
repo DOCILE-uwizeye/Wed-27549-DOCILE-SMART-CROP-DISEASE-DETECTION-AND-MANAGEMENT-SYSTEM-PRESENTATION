@@ -479,109 +479,99 @@ SELECT * FROM vw_user_rankings WHERE ROWNUM < 5;
 
 
 # PHASE VII: Advanced Programming & Auditing
-**Objective:** Implement triggers, business rules, and comprehensive auditing
+**Objective:** Implement triggers, business rules, and comprehensive auditing.  
+This phase ensures secure operations, strict restriction checks, and full system auditing.
 
-**Critical Business Rule:** Employees CANNOT INSERT/UPDATE/DELETE on:
-- WEEKDAYS (Monday-Friday)
-- PUBLIC HOLIDAYS (upcoming month only)
+---
 
-##  Holiday Management
+## 🔒 Critical Business Rule  
+Employees are **NOT allowed** to INSERT, UPDATE, or DELETE on:
 
-### Public Holidays Table Creation and Insert holiday data
+- **WEEKDAYS (Monday–Friday)**
+- **PUBLIC HOLIDAYS** (Upcoming month only)
 
-**Purpose:** Store public holidays to enforce operation restrictions
+These rules are enforced automatically using PL/SQL functions and triggers.
 
-(./images/phase%20VIIscr1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/93ae02b0-7a20-4bfc-9521-f7c1dcb5b5fd" />
+---
 
+# 1. Holiday Management
 
+##  Public Holidays Table + Insert Data  
+**Purpose:** Store holiday dates used to block operations.
 
-
-**Result:**
--  5 public holidays loaded
-- Dates cover upcoming month
--  Unique constraint on holiday_date enforced
-
-
-## Audit Log Table
-
-### Table Creation and Create Performance Indexes
-
-**Purpose:** Comprehensive audit trail for all database operations
+### 📷 Screenshot  
+![Public Holidays](./images/phase%20VIIscr1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/d187bc0f-7455-4edc-bbca-b08cf8ae7bf0" />
 
 
-(screenshots/01_audit_table_creation.png)<img width="740" height="569" alt="phase VII scr2" src="https://github.com/user-attachments/assets/1ada1205-c530-4bd1-82c2-943ab3c01c9e" />
+###  Result
+- 5 public holidays successfully inserted  
+- All dates fall within the upcoming month  
+- Unique constraint on `holiday_date` enforced  
 
+---
 
-**Features Implemented:**
--  Auto-incrementing audit_id
--  Tracks table name and operation type
--  Captures user name and date/day
--  Records operation status (ALLOWED/DENIED)
--  Stores error messages for denied operations
--  Captures IP address and session ID
--  Preserves old and new values as CLOB
--  Check constraints enforce valid values
--  Performance indexes on key columns
+# 2. Audit Log Table
 
+##  Table Creation + Performance Indexes  
+**Purpose:** Maintain a complete audit trail for ALL database operations.
 
-##  Audit Logging Function
+###  Screenshot  
+![Audit Table Creation](screenshots/01_audit_table_creation.png)
 
-### Function Implementation
+###  Features Implemented
+- Auto-incrementing `audit_id`
+- Tracks:
+  - Table name  
+  - Operation type (INSERT/UPDATE/DELETE)  
+  - Username  
+  - Timestamp and day  
+  - Operation status (**ALLOWED / DENIED**)  
+  - Error message (if denied)  
+- Records old and new values (CLOB)  
+- Stores IP address and session ID  
+- Check constraints for valid audit values  
+- Indexes created for performance:  
+  - `operation_date`  
+  - `table_name`  
+  - `username`
 
-**Purpose:** Autonomous function to log all operations regardless of transaction outcome
+---
 
-(screenshots/02_audit_function.png)<img width="735" height="688" alt="phase VII scr3" src="https://github.com/user-attachments/assets/dac3eae3-8472-4da6-8884-987dad6f70fa" />
+# 3. Audit Logging Function
 
+##  Function Implementation  
+**Purpose:** Log every operation using an autonomous transaction.
 
-**Key Features:**
--  **PRAGMA AUTONOMOUS_TRANSACTION** - Logs persist even if main transaction rolls back
--  **Context Capture** - Retrieves IP_ADDRESS and SESSIONID from system
--  **Error Handling** - Gracefully handles context retrieval failures
--  **Parameter Flexibility** - Optional parameters for error messages and data changes
--  **Return Value** - Returns audit_id for reference
--  **Independent Commit** - Audit log commits separately from main transaction
+###  Screenshot  
+![Audit Function](screenshots/02_audit_function.png)
 
-**Function Parameters:**
+###  Key Features
+- Uses **PRAGMA AUTONOMOUS_TRANSACTION**
+- Logs persist even if the main transaction rolls back  
+- Captures IP address, session ID, and context values  
+- Handles exceptions gracefully  
+- Accepts optional parameters  
+- Returns generated `audit_id`  
+- Independently commits audit entries  
+
+###  Function Parameters
+
 | Parameter | Type | Required | Purpose |
 |-----------|------|----------|---------|
 | p_table_name | VARCHAR2 | Yes | Table being accessed |
 | p_operation | VARCHAR2 | Yes | INSERT/UPDATE/DELETE |
-| p_status | VARCHAR2 | Yes | ALLOWED/DENIED |
-| p_error_msg | VARCHAR2 | No | Error message if denied |
-| p_old_values | CLOB | No | Previous data state |
-| p_new_values | CLOB | No | New data state |
+| p_status | VARCHAR2 | Yes | ALLOWED or DENIED |
+| p_error_msg | VARCHAR2 | No | Error details if blocked |
+| p_old_values | CLOB | No | Data before change |
+| p_new_values | CLOB | No | Data after change |
 
 ---
 
-## Restriction Check Function
+# 4 Restriction Check Function
 
-### Function Implementation
-**Business Logic:**
+##  Business Logic Flow
 
 
-┌─────────────────────────────────────────┐
-│     check_operation_allowed()           │
-├─────────────────────────────────────────┤
-│ 1. Get current day of week              │
-│ 2. Check if today is a holiday          │
-│                                          │
-│ IF Monday-Friday:                        │
-│    → RETURN "DENIED: WEEKDAY"            │
-│                                          │
-│ IF Public Holiday:                       │
-│    → RETURN "DENIED: HOLIDAY"            │
-│                                          │
-│ ELSE (Weekend, not holiday):             │
-│    → RETURN "ALLOWED"                    │
-└─────────────────────────────────────────┘
-```
-
-**Function Returns:**
-- `"ALLOWED"` - Operation can proceed
-- `"DENIED: ... on WEEKDAYS (MONDAY)"` - Blocked due to weekday
-- `"DENIED: ... on PUBLIC HOLIDAY (Christmas Day)"` - Blocked due to holiday
-
----
 
 ## S Simple Triggers
 
