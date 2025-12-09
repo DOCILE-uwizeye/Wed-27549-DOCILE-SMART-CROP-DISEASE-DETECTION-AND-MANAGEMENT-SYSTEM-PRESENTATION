@@ -532,7 +532,7 @@ During:
 # 5. Triggers
 
 ## Screenshot
-![Phase VII Screenshot 5](images/phase_VII_scr5.png)<img width="867" height="605" alt="phase VII scr5" src="https://github.com/user-attachments/assets/855bfad5-acd7-42ce-bd61-aed016152c1a" />
+![Phase VII Screenshot 7](images/phase_VII_scr7.png)
 
 
 # 6. All Triggers
@@ -544,4 +544,5 @@ During:
 # 7. Testing Results
 
 ## Screenshot
-![Phase VII Screenshot 7](images/phase_VII_scr7.png)
+![Phase VII Screenshot 5](images/phase_VII_scr5.png)![Uploading phase VII scr5.png…]()
+
