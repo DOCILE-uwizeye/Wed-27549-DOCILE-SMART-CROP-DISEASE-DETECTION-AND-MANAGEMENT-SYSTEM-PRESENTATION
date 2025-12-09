@@ -506,7 +506,7 @@ During:
 - Unique constraint on `holiday_date` enforced
 
 
-# 2. Audit Log Table
+#  Audit Log Table
 
 ## Table Creation + Indexes
 **Purpose:** Maintain a complete audit trail for all database operations.
@@ -522,27 +522,27 @@ During:
 - Stores IP and session ID  
 - Indexes for `operation_date`, `table_name`, `username`
 
----
 
-# 3. Audit Logging Function
+
+#  Audit Logging Function
 
 ## Screenshot
 ![Phase VII Screenshot 3](images/phase_VII_scr3.png)<img width="735" height="688" alt="phase VII scr3" src="https://github.com/user-attachments/assets/7e86e92f-feec-4289-bd36-3c47d65fda19" />
 
-# 5. Triggers
+#  Testing Results
 
 ## Screenshot
 ![Phase VII Screenshot 5](images/phase_VII_scr5.png)<img width="867" height="605" alt="phase VII scr5" src="https://github.com/user-attachments/assets/ff951368-57d1-4a2c-ab5a-baa947e85faf" />
 
 
 
-# 6. All Triggers
+#  All Triggers
 
 ## Screenshot
 ![Phase VII Screenshot 6](images/phase_VII_scr6.png)<img width="1131" height="686" alt="phase VII scr6" src="https://github.com/user-attachments/assets/a0c7ca2b-b690-4974-be15-eed65e242bb7" />
 
 
-# 7. Testing Results
+#  Triggers
 
 ## Screenshot
 ![Phase VII Screenshot 7](images/phase_VII_scr7.png)<img width="860" height="475" alt="phase VII scr7" src="https://github.com/user-attachments/assets/40dc96c3-e8d4-4471-b6df-e65ee14af51a" />
