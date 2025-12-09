@@ -489,9 +489,9 @@ During:
 - **WEEKDAYS (Monday–Friday)**
 - **PUBLIC HOLIDAYS (Upcoming Month Only)**
 
----
 
-# 1. Holiday Management
+
+#  Holiday Management
 
 ## Public Holidays Table + Insert Data
 **Purpose:** Store holiday dates used to block operations.
@@ -536,13 +536,13 @@ During:
 
 
 
-#  All Triggers
+#  Triggers
 
 ## Screenshot
 ![Phase VII Screenshot 6](images/phase_VII_scr6.png)<img width="1131" height="686" alt="phase VII scr6" src="https://github.com/user-attachments/assets/a0c7ca2b-b690-4974-be15-eed65e242bb7" />
 
 
-#  Triggers
+#  All Triggers
 
 ## Screenshot
 ![Phase VII Screenshot 7](images/phase_VII_scr7.png)<img width="860" height="475" alt="phase VII scr7" src="https://github.com/user-attachments/assets/40dc96c3-e8d4-4471-b6df-e65ee14af51a" />
