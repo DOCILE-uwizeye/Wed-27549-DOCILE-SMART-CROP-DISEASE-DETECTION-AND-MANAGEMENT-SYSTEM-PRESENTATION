@@ -453,7 +453,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 **Total Records Inserted:** 30
 (https://user-images.githubusercontent.com/12345/image.png)<img width="1292" height="691" alt="phase V scr18" src="https://github.com/user-attachments/assets/bd1e5c3b-086a-453e-a53f-393582c01497" />
 
-# PHASE VI: Database Interaction & Transactions
+# Phase VI : Database Interaction & Transactions
 
 
 ## Testing Results
@@ -616,7 +616,7 @@ CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 **Purpose:** Store public holidays to enforce operation restrictions
 
-(./images/Screenshot1.png)<img width="782" height="656" alt="phase VIIscr1" src="https://github.com/user-attachments/assets/a71a296b-8ea3-4029-97f5-6332ac5daa65" />
+(./images/phase%20VIIscr1.png)
 
 
 
